@@ -53,6 +53,7 @@ android {
     dependencies {
         implementation fileTree(dir: 'libs', include: ['*.jar'])
         implementation "com.google.code.gson:gson:2.10.1"
+        implementation 'com.liulishuo.filedownloader:library:1.7.7'
     }
 }
 String localMavenPath = project.mkdir("build").absolutePath

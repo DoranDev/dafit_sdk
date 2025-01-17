@@ -6,9 +6,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.os.Environment
 import android.text.TextUtils
 import android.util.Log
-import androidx.core.content.ContextCompat
 import com.crrepa.ble.CRPBleClient
 import com.crrepa.ble.conn.CRPBleConnection
 import com.crrepa.ble.conn.CRPBleDevice
@@ -58,20 +58,12 @@ import com.crrepa.ble.conn.bean.CRPWatchFaceStoreRequestInfo
 import com.crrepa.ble.conn.bean.CRPWatchFaceStoreTagInfo
 import com.crrepa.ble.conn.bond.CRPBluetoothManager
 import com.crrepa.ble.conn.callback.CRPAlarmCallback
-import com.crrepa.ble.conn.callback.CRPDeviceBreathingLightCallback
-import com.crrepa.ble.conn.callback.CRPDeviceDisplayWatchFaceCallback
+import com.crrepa.ble.conn.callback.CRPContactConfigCallback
 import com.crrepa.ble.conn.callback.CRPDeviceFirmwareVersionCallback
 import com.crrepa.ble.conn.callback.CRPDeviceFunctionCallback
-import com.crrepa.ble.conn.callback.CRPDeviceGoalStepCallback
 import com.crrepa.ble.conn.callback.CRPDeviceMetricSystemCallback
-import com.crrepa.ble.conn.callback.CRPDevicePeriodTimeCallback
 import com.crrepa.ble.conn.callback.CRPDevicePhysiologcalPeriodCallback
-import com.crrepa.ble.conn.callback.CRPDeviceQuickViewCallback
-import com.crrepa.ble.conn.callback.CRPDeviceSedentaryReminderCallback
 import com.crrepa.ble.conn.callback.CRPDeviceSupportWatchFaceCallback
-import com.crrepa.ble.conn.callback.CRPDeviceTimeSystemCallback
-import com.crrepa.ble.conn.callback.CRPDeviceVersionCallback
-import com.crrepa.ble.conn.callback.CRPDeviceWatchFaceLayoutCallback
 import com.crrepa.ble.conn.callback.CRPWatchFaceDetailsCallback
 import com.crrepa.ble.conn.callback.CRPWatchFaceStoreCallback
 import com.crrepa.ble.conn.callback.CRPWatchFaceStoreTagCallback
@@ -111,6 +103,7 @@ import com.crrepa.ble.conn.type.CRPWatchFaceLayoutType
 import com.crrepa.ble.conn.type.CRPWatchFaceStoreType
 import com.crrepa.ble.conn.type.CRPWeatherId
 import com.crrepa.ble.scan.bean.CRPScanRecordInfo
+import com.crrepa.ble.scan.bean.CRPScanRecordInfo.McuPlatform
 import com.crrepa.ble.trans.tp.CRPTpInfo
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -123,6 +116,9 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.io.File
 import java.util.Date
+import com.liulishuo.filedownloader.BaseDownloadTask
+import com.liulishuo.filedownloader.FileDownloadListener
+import com.liulishuo.filedownloader.FileDownloader
 
 /** DafitSdkPlugin */
 class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -136,7 +132,26 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   var btBluetoothDevice: BluetoothDevice? = null
   private val TAG: String = "DafitSdkPlugin"
   var unBond: Boolean = true
+  private var mSupportWatchFaceList: List<Int>? = null
   private var mWatchFaceLayoutInfo: CRPWatchFaceLayoutInfo? = null
+  var mWatchFaceStoreType: CRPWatchFaceStoreType? = null
+  var mWatchFaceMaxSize: Int = 0
+  var mWatchFaceApiVersion: Int = -1
+  var mWatchFaceFeature: Int = -1
+
+  var mWatchFaceStoreTagInfoList: List<CRPWatchFaceStoreTagInfo>? = null
+  var mWatchFaceStoreInfo: CRPWatchFaceStoreInfo? = null
+
+  var watchfaceUrl: String? = null
+  var watchfaceId: Int = 0
+
+  private val mFirmwareVersion: String? = null
+  private var mcuPlatform: McuPlatform? = null
+
+
+  private val UI_FILE_PATH: String = (Environment.getExternalStorageDirectory().absolutePath
+          + File.separator + "crrepa" + File.separator + "ota" + File.separator
+          + "eaf49ccb4dbe5df51af35803662867d5.bin")
 
   private var deviceDataReceivedChannel: EventChannel? = null
   private var deviceDataReceivedSink : EventChannel.EventSink? = null
@@ -589,7 +604,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             watchFaceLayoutInfo.timePosition = CRPWatchFaceLayoutType.WATCH_FACE_TIME_BOTTOM
             watchFaceLayoutInfo.timeTopContent = CRPWatchFaceLayoutType.WATCH_FACE_CONTENT_SLEEP
             watchFaceLayoutInfo.timeBottomContent = CRPWatchFaceLayoutType.WATCH_FACE_CONTENT_STEP
-            val color = ContextCompat.getColor(this, R.color.color_watch_face_text_blue)
+            val color = 0
             watchFaceLayoutInfo.textColor = color
             watchFaceLayoutInfo.backgroundPictureMd5 = CRPWatchFaceLayoutType.DEFAULT_WATCH_FACE_BG_MD5
             mBleConnection!!.sendWatchFaceLayout(watchFaceLayoutInfo)
@@ -630,8 +645,8 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                   "onSifliSupportWatchFace: $info"
                 )
                 mWatchFaceStoreType = CRPWatchFaceStoreType.SIFLI
-                mSupportWatchFaceList = java.util.ArrayList<Int>()
-                mSupportWatchFaceList.add(info.type)
+//                mSupportWatchFaceList = java.util.ArrayList<Int>()
+//                mSupportWatchFaceList.add(info.type)
               }
 
               override fun onJieliSupportWatchFace(info: CRPJieliSupportWatchFaceInfo) {
@@ -678,7 +693,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               return
             }
 
-            if (mSupportWatchFaceList == null || mSupportWatchFaceList.isEmpty()) {
+            if (mSupportWatchFaceList == null || mSupportWatchFaceList?.isEmpty() == true) {
               Log.e(TAG, "mSupportWatchFaceList is null!")
               return
             }
@@ -728,7 +743,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               })
           }
           "query_watch_face_store_list" -> {
-            if (mWatchFaceStoreTagInfoList == null || mWatchFaceStoreTagInfoList.isEmpty()) {
+            if (mWatchFaceStoreTagInfoList == null || mWatchFaceStoreTagInfoList?.isEmpty()==true) {
               Log.e(
                 TAG,
                 "mWatchFaceStoreTagInfoList is null!"
@@ -761,7 +776,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             }
             mBleConnection!!.queryWatchFaceStoreList(
               watchFaceStoreListRequestInfo,
-              mWatchFaceStoreTagInfoList.get(0).getTagId(),
+              mWatchFaceStoreTagInfoList!![0].tagId,
               object : CRPWatchFaceStoreCallback {
                 override fun onWatchFaceStoreChange(info: CRPWatchFaceStoreInfo) {
                   Log.d(
@@ -781,7 +796,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               Log.e(TAG, "mWatchFaceStoreInfo is null!")
               return
             }
-            val watchfaceList: List<CRPWatchFaceStoreInfo.WatchFaceBean> = mWatchFaceStoreInfo.getList()
+            val watchfaceList: List<CRPWatchFaceStoreInfo.WatchFaceBean> = mWatchFaceStoreInfo!!.getList()
             if (watchfaceList == null || watchfaceList.isEmpty()) {
               Log.e(TAG, "watchfaceList is null!")
               return
@@ -843,25 +858,25 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             )
 
             val watchfacePath: String = File(
-              getFilesDir(), "moyoung" + File.separator +
+              mContext.filesDir, "moyoung" + File.separator +
                       "watchface" + File.separator +
                       "2023-10-09.bin"
-            ).getPath()
+            ).path
             FileDownloader.getImpl()
               .create(watchfaceUrl)
               .setPath(watchfacePath)
               .setListener(object : FileDownloadListener() {
-                protected fun pending(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
+                override fun pending(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
                 }
 
-                protected fun progress(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
+                override fun progress(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
                   Log.d(
                     TAG,
                     "progress soFarBytes: $soFarBytes"
                   )
                 }
 
-                protected fun completed(task: BaseDownloadTask) {
+                override fun completed(task: BaseDownloadTask) {
                   Log.d(
                     TAG,
                     "completed path: " + task.getPath()
@@ -902,14 +917,14 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                   }, 30)
                 }
 
-                protected fun paused(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
+                override fun paused(task: BaseDownloadTask?, soFarBytes: Int, totalBytes: Int) {
                 }
 
-                protected fun error(task: BaseDownloadTask?, e: Throwable) {
+                override fun error(task: BaseDownloadTask?, e: Throwable) {
                   e.printStackTrace()
                 }
 
-                protected fun warn(task: BaseDownloadTask?) {
+                override fun warn(task: BaseDownloadTask?) {
                 }
               })
               .start()
@@ -939,13 +954,14 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             tpInfo.length = length
             tpInfo.startIndex = startIndex
           }
-          "query_quick_contacts" -> mBleConnection!!.checkSupportQuickContact(object : CRPContactConfigCallback {
+          "query_quick_contacts" -> mBleConnection!!.checkSupportQuickContact(object :
+            CRPContactConfigCallback {
             override fun onContactConfig(info: CRPContactConfigInfo) {
               mQuickContactConfigInfo = info
             }
           })
           "send_quick_contacts" -> {
-            if (mQuickContactConfigInfo == null || !mQuickContactConfigInfo.isSupported) {
+            if (mQuickContactConfigInfo == null || !mQuickContactConfigInfo!!.isSupported) {
               return
             }
             val avatarHeight = mQuickContactConfigInfo!!.height
@@ -976,10 +992,13 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             val avatarOptions = BitmapFactory.Options()
             avatarOptions.inScaled = false
 
-            var avatarBitmap = BitmapFactory.decodeResource(
-              getResources(), R.drawable.abbreviated, avatarOptions
-            )
-            avatarBitmap = changeBitmapSize(avatarBitmap, avatarWidth, avatarHeight)
+            val avatarBytes: ByteArray? = call.argument<ByteArray?>("avatarBytes")
+            val offset = 0
+            val avatarLength = avatarBytes!!.size
+            val avatarBitmapX = BitmapFactory.decodeByteArray(avatarBytes, offset, avatarLength)
+
+            val avatarBitmap = changeBitmapSize(avatarBitmapX, avatarWidth, avatarHeight)
+
             mBleConnection!!.sendContactAvatar(1, avatarBitmap, 30, object : CRPFileTransListener {
               override fun onTransProgressStarting() {
               }

@@ -106,6 +106,9 @@ import com.crrepa.ble.scan.bean.CRPScanRecordInfo
 import com.crrepa.ble.scan.bean.CRPScanRecordInfo.McuPlatform
 import com.crrepa.ble.trans.tp.CRPTpInfo
 import com.google.gson.Gson
+import com.liulishuo.filedownloader.BaseDownloadTask
+import com.liulishuo.filedownloader.FileDownloadListener
+import com.liulishuo.filedownloader.FileDownloader
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
@@ -116,9 +119,6 @@ import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
 import java.io.File
 import java.util.Date
-import com.liulishuo.filedownloader.BaseDownloadTask
-import com.liulishuo.filedownloader.FileDownloadListener
-import com.liulishuo.filedownloader.FileDownloader
 
 /** DafitSdkPlugin */
 class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -158,6 +158,15 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private val deviceDataReceivedHandler = object : EventChannel.StreamHandler {
     override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
       deviceDataReceivedSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  private var connectionStateChannel: EventChannel? = null
+  private var connectionStateSink : EventChannel.EventSink? = null
+  private val connectionStateHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      connectionStateSink = eventSink
     }
     override fun onCancel(o: Any?) {}
   }
@@ -332,6 +341,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     deviceDataReceivedChannel = EventChannel(flutterPluginBinding.binaryMessenger, "deviceDataReceived")
     deviceDataReceivedChannel!!.setStreamHandler(deviceDataReceivedHandler)
 
+    connectionStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "connectionState")
+    connectionStateChannel!!.setStreamHandler(connectionStateHandler)
+
     getBatteryLevelChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBatteryLevel")
     getBatteryLevelChannel!!.setStreamHandler(getBatteryLevelHandler)
 
@@ -406,7 +418,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
       }
       "disconnect" -> {
-
+        if (mBleDevice != null) {
+          mBleDevice!!.disconnect()
+        }
       }
       else -> {
         if (!mBleDevice!!.isConnected) {

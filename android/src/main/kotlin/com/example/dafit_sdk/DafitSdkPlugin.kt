@@ -171,6 +171,155 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onCancel(o: Any?) {}
   }
 
+  private var getStockChangeChannel: EventChannel? = null
+  private var getStockChangeSink : EventChannel.EventSink? = null
+  private val getStockChangeHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getStockChangeSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Quick Responses Channel
+  private var getQuickResponsesChannel: EventChannel? = null
+  private var getQuickResponsesSink: EventChannel.EventSink? = null
+  private val getQuickResponsesHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getQuickResponsesSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Breath Rate Channel
+  private var getBreathRateChannel: EventChannel? = null
+  private var getBreathRateSink: EventChannel.EventSink? = null
+  private val getBreathRateHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getBreathRateSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // HRV Channel
+  private var getHrvChannel: EventChannel? = null
+  private var getHrvSink: EventChannel.EventSink? = null
+  private val getHrvHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getHrvSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Temperature Channel
+  private var getTempChannel: EventChannel? = null
+  private var getTempSink: EventChannel.EventSink? = null
+  private val getTempHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getTempSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Movement State Channel
+  private var getMovementStateChannel: EventChannel? = null
+  private var getMovementStateSink: EventChannel.EventSink? = null
+  private val getMovementStateHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getMovementStateSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Training Channel
+  private var getTrainingChannel: EventChannel? = null
+  private var getTrainingSink: EventChannel.EventSink? = null
+  private val getTrainingHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getTrainingSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Sleep Action Channel
+  private var getSleepActionChannel: EventChannel? = null
+  private var getSleepActionSink: EventChannel.EventSink? = null
+  private val getSleepActionHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getSleepActionSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Steps Category Channel
+  private var getStepsCategoryChannel: EventChannel? = null
+  private var getStepsCategorySink: EventChannel.EventSink? = null
+  private val getStepsCategoryHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getStepsCategorySink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Step Change Channel
+  private var getStepChangeChannel: EventChannel? = null
+  private var getStepChangeSink: EventChannel.EventSink? = null
+  private val getStepChangeHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getStepChangeSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Sleep Change Channel
+  private var getSleepChangeChannel: EventChannel? = null
+  private var getSleepChangeSink: EventChannel.EventSink? = null
+  private val getSleepChangeHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getSleepChangeSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Heart Rate Channel
+  private var getHeartRateChannel: EventChannel? = null
+  private var getHeartRateSink: EventChannel.EventSink? = null
+  private val getHeartRateHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getHeartRateSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Blood Pressure Channel
+  private var getBloodPressureChannel: EventChannel? = null
+  private var getBloodPressureSink: EventChannel.EventSink? = null
+  private val getBloodPressureHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getBloodPressureSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // Blood Oxygen Channel
+  private var getBloodOxygenChannel: EventChannel? = null
+  private var getBloodOxygenSink: EventChannel.EventSink? = null
+  private val getBloodOxygenHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getBloodOxygenSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  // ECG Channel
+  private var getECGChannel: EventChannel? = null
+  private var getECGSink: EventChannel.EventSink? = null
+  private val getECGHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getECGSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
   fun getBleClient(context: Context): CRPBleClient {
     return mBleClient
   }
@@ -185,6 +334,65 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
     getBatteryLevelChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBatteryLevel")
     getBatteryLevelChannel!!.setStreamHandler(getBatteryLevelHandler)
+
+    getStockChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getStockChange")
+    getStockChangeChannel!!.setStreamHandler(getStockChangeHandler)
+    // Quick Responses Channel Setup
+    getQuickResponsesChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getQuickResponses")
+    getQuickResponsesChannel!!.setStreamHandler(getQuickResponsesHandler)
+
+// Breath Rate Channel Setup
+    getBreathRateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBreathRate")
+    getBreathRateChannel!!.setStreamHandler(getBreathRateHandler)
+
+// HRV Channel Setup
+    getHrvChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getHrv")
+    getHrvChannel!!.setStreamHandler(getHrvHandler)
+
+// Temperature Channel Setup
+    getTempChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getTemp")
+    getTempChannel!!.setStreamHandler(getTempHandler)
+
+// Movement State Channel Setup
+    getMovementStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getMovementState")
+    getMovementStateChannel!!.setStreamHandler(getMovementStateHandler)
+
+// Training Channel Setup
+    getTrainingChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getTraining")
+    getTrainingChannel!!.setStreamHandler(getTrainingHandler)
+
+// Sleep Action Channel Setup
+    getSleepActionChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getSleepAction")
+    getSleepActionChannel!!.setStreamHandler(getSleepActionHandler)
+
+// Steps Category Channel Setup
+    getStepsCategoryChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getStepsCategory")
+    getStepsCategoryChannel!!.setStreamHandler(getStepsCategoryHandler)
+
+// Step Change Channel Setup
+    getStepChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getStepChange")
+    getStepChangeChannel!!.setStreamHandler(getStepChangeHandler)
+
+// Sleep Change Channel Setup
+    getSleepChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getSleepChange")
+    getSleepChangeChannel!!.setStreamHandler(getSleepChangeHandler)
+
+// Heart Rate Channel Setup
+    getHeartRateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getHeartRate")
+    getHeartRateChannel!!.setStreamHandler(getHeartRateHandler)
+
+// Blood Pressure Channel Setup
+    getBloodPressureChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBloodPressure")
+    getBloodPressureChannel!!.setStreamHandler(getBloodPressureHandler)
+
+// Blood Oxygen Channel Setup
+    getBloodOxygenChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBloodOxygen")
+    getBloodOxygenChannel!!.setStreamHandler(getBloodOxygenHandler)
+
+// ECG Channel Setup
+    getECGChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getECG")
+    getECGChannel!!.setStreamHandler(getECGHandler)
+
 
   }
 
@@ -1333,7 +1541,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   }
 
 
-  var mTempChangeListener: CRPTempChangeListener = object : CRPTempChangeListener {
+  private var mTempChangeListener: CRPTempChangeListener = object : CRPTempChangeListener {
     override fun onContinueState(state: Boolean) {
       Log.d(
         TAG,

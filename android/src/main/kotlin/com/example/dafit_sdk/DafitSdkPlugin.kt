@@ -7,6 +7,8 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.text.TextUtils
 import android.util.Log
 import com.crrepa.ble.CRPBleClient
@@ -1380,8 +1382,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
       }
 
+      Handler(Looper.getMainLooper()).post {
+        connectionStateSink?.success(map)
+      }
 
-      connectionStateSink?.success(map)
       updateConnectState(state)
     })
 

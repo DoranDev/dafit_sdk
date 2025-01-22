@@ -1357,21 +1357,31 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         "onConnectionStateChange: $newState"
       )
       var state = -1
+      var map =   HashMap<String, Any?>()
+      map["state"] = newState
       when (newState) {
         CRPBleConnectionStateListener.STATE_CONNECTED -> {
           state = CRPBleConnectionStateListener.STATE_CONNECTED
           testSet()
+          map["name"] = "STATE_CONNECTED"
         }
 
-        CRPBleConnectionStateListener.STATE_CONNECTING -> state = CRPBleConnectionStateListener.STATE_CONNECTING
+        CRPBleConnectionStateListener.STATE_CONNECTING -> {
+          state = CRPBleConnectionStateListener.STATE_CONNECTING
+          map["name"] = "STATE_CONNECTING"
+        }
         CRPBleConnectionStateListener.STATE_DISCONNECTED -> {
           closeGatt()
           state = CRPBleConnectionStateListener.STATE_DISCONNECTED
+          map["name"] = "STATE_DISCONNECTED"
 //       if (unBond) {
 //            CRPBluetoothManager.getInstance(mContext).unBondDevice(btBluetoothDevice)
 //          }
         }
       }
+
+
+      connectionStateSink?.success(map)
       updateConnectState(state)
     })
 

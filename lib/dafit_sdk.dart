@@ -164,6 +164,13 @@ class DafitSdk {
     await _methodChannel.invokeMethod('send_future_weather');
   }
 
+  // Connection state stream
+  final EventChannel _connectionStateChannel =
+      const EventChannel('connectionState');
+  Stream get connectionStateStream => _connectionStateChannel
+      .receiveBroadcastStream(_connectionStateChannel.name)
+      .cast();
+
   // Device data received stream
   final EventChannel _deviceDataReceivedChannel =
       const EventChannel('deviceDataReceived');

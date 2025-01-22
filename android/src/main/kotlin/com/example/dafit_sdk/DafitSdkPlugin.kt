@@ -56,7 +56,6 @@ import com.crrepa.ble.conn.bean.CRPWatchFaceLayoutInfo
 import com.crrepa.ble.conn.bean.CRPWatchFaceStoreInfo
 import com.crrepa.ble.conn.bean.CRPWatchFaceStoreRequestInfo
 import com.crrepa.ble.conn.bean.CRPWatchFaceStoreTagInfo
-import com.crrepa.ble.conn.bond.CRPBluetoothManager
 import com.crrepa.ble.conn.callback.CRPAlarmCallback
 import com.crrepa.ble.conn.callback.CRPContactConfigCallback
 import com.crrepa.ble.conn.callback.CRPDeviceFirmwareVersionCallback
@@ -1368,9 +1367,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         CRPBleConnectionStateListener.STATE_DISCONNECTED -> {
           closeGatt()
           state = CRPBleConnectionStateListener.STATE_DISCONNECTED
-       if (unBond) {
-            CRPBluetoothManager.getInstance(mContext).unBondDevice(btBluetoothDevice)
-          }
+//       if (unBond) {
+//            CRPBluetoothManager.getInstance(mContext).unBondDevice(btBluetoothDevice)
+//          }
         }
       }
       updateConnectState(state)

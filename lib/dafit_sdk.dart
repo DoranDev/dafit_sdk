@@ -166,7 +166,7 @@ class DafitSdk {
 
   // Connection state stream
   final EventChannel _connectionStateChannel =
-      const EventChannel('connectionState');
+      const EventChannel('dafitConnectionState');
   Stream get connectionStateStream => _connectionStateChannel
       .receiveBroadcastStream(_connectionStateChannel.name)
       .cast();
@@ -180,105 +180,107 @@ class DafitSdk {
 
   // Battery level stream
   final EventChannel _getBatteryLevelChannel =
-      const EventChannel('getBatteryLevel');
+      const EventChannel('dafitGetBatteryLevel');
   Stream get batteryLevelStream => _getBatteryLevelChannel
       .receiveBroadcastStream(_getBatteryLevelChannel.name)
       .cast();
 
   // Stock change stream
   final EventChannel _getStockChangeChannel =
-      const EventChannel('getStockChange');
+      const EventChannel('dafitGetStockChange');
   Stream get stockChangeStream => _getStockChangeChannel
       .receiveBroadcastStream(_getStockChangeChannel.name)
       .cast();
 
   // Quick responses stream
   final EventChannel _getQuickResponsesChannel =
-      const EventChannel('getQuickResponses');
+      const EventChannel('dafitGetQuickResponses');
   Stream get quickResponsesStream => _getQuickResponsesChannel
       .receiveBroadcastStream(_getQuickResponsesChannel.name)
       .cast();
 
   // Breath rate stream
   final EventChannel _getBreathRateChannel =
-      const EventChannel('getBreathRate');
+      const EventChannel('dafitGetBreathRate');
   Stream get breathRateStream => _getBreathRateChannel
       .receiveBroadcastStream(_getBreathRateChannel.name)
       .cast();
 
   // HRV stream
-  final EventChannel _getHrvChannel = const EventChannel('getHrv');
+  final EventChannel _getHrvChannel = const EventChannel('dafitGetHrv');
   Stream get hrvStream =>
       _getHrvChannel.receiveBroadcastStream(_getHrvChannel.name).cast();
 
   // Temperature stream
-  final EventChannel _getTempChannel = const EventChannel('getTemp');
+  final EventChannel _getTempChannel = const EventChannel('dafitGetTemp');
   Stream get tempStream =>
       _getTempChannel.receiveBroadcastStream(_getTempChannel.name).cast();
 
   // Movement state stream
   final EventChannel _getMovementStateChannel =
-      const EventChannel('getMovementState');
+      const EventChannel('dafitGetMovementState');
   Stream get movementStateStream => _getMovementStateChannel
       .receiveBroadcastStream(_getMovementStateChannel.name)
       .cast();
 
   // Training stream
-  final EventChannel _getTrainingChannel = const EventChannel('getTraining');
+  final EventChannel _getTrainingChannel =
+      const EventChannel('dafitGetTraining');
   Stream get trainingStream => _getTrainingChannel
       .receiveBroadcastStream(_getTrainingChannel.name)
       .cast();
 
   // Sleep action stream
   final EventChannel _getSleepActionChannel =
-      const EventChannel('getSleepAction');
+      const EventChannel('dafitGetSleepAction');
   Stream get sleepActionStream => _getSleepActionChannel
       .receiveBroadcastStream(_getSleepActionChannel.name)
       .cast();
 
   // Steps category stream
   final EventChannel _getStepsCategoryChannel =
-      const EventChannel('getStepsCategory');
+      const EventChannel('dafitGetStepsCategory');
   Stream get stepsCategoryStream => _getStepsCategoryChannel
       .receiveBroadcastStream(_getStepsCategoryChannel.name)
       .cast();
 
   // Step change stream
   final EventChannel _getStepChangeChannel =
-      const EventChannel('getStepChange');
+      const EventChannel('dafitGetStepChange');
   Stream get stepChangeStream => _getStepChangeChannel
       .receiveBroadcastStream(_getStepChangeChannel.name)
       .cast();
 
   // Sleep change stream
   final EventChannel _getSleepChangeChannel =
-      const EventChannel('getSleepChange');
+      const EventChannel('dafitGetSleepChange');
   Stream get sleepChangeStream => _getSleepChangeChannel
       .receiveBroadcastStream(_getSleepChangeChannel.name)
       .cast();
 
   // Heart rate stream
-  final EventChannel _getHeartRateChannel = const EventChannel('getHeartRate');
+  final EventChannel _getHeartRateChannel =
+      const EventChannel('dafitGetHeartRate');
   Stream get heartRateStream => _getHeartRateChannel
       .receiveBroadcastStream(_getHeartRateChannel.name)
       .cast();
 
   // Blood pressure stream
   final EventChannel _getBloodPressureChannel =
-      const EventChannel('getBloodPressure');
+      const EventChannel('dafitGetBloodPressure');
   Stream get bloodPressureStream => _getBloodPressureChannel
       .receiveBroadcastStream(_getBloodPressureChannel.name)
       .cast();
 
   // Blood oxygen stream
   final EventChannel _getBloodOxygenChannel =
-      const EventChannel('getBloodOxygen');
+      const EventChannel('dafitGetBloodOxygen');
   Stream get bloodOxygenStream => _getBloodOxygenChannel
       .receiveBroadcastStream(_getBloodOxygenChannel.name)
       .cast();
 
   // ECG stream
-  final EventChannel _getECGChannel = const EventChannel('getECG');
+  final EventChannel _getECGChannel = const EventChannel('dafitGetECG');
   Stream get ecgStream =>
       _getECGChannel.receiveBroadcastStream(_getECGChannel.name).cast();
 }

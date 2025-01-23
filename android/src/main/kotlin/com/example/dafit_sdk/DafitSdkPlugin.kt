@@ -342,68 +342,68 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     deviceDataReceivedChannel = EventChannel(flutterPluginBinding.binaryMessenger, "deviceDataReceived")
     deviceDataReceivedChannel!!.setStreamHandler(deviceDataReceivedHandler)
 
-    connectionStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "connectionState")
+    connectionStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitConnectionState")
     connectionStateChannel!!.setStreamHandler(connectionStateHandler)
 
-    getBatteryLevelChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBatteryLevel")
+    getBatteryLevelChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetBatteryLevel")
     getBatteryLevelChannel!!.setStreamHandler(getBatteryLevelHandler)
 
-    getStockChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getStockChange")
+    getStockChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetStockChange")
     getStockChangeChannel!!.setStreamHandler(getStockChangeHandler)
     // Quick Responses Channel Setup
-    getQuickResponsesChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getQuickResponses")
+    getQuickResponsesChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetQuickResponses")
     getQuickResponsesChannel!!.setStreamHandler(getQuickResponsesHandler)
 
 // Breath Rate Channel Setup
-    getBreathRateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBreathRate")
+    getBreathRateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetBreathRate")
     getBreathRateChannel!!.setStreamHandler(getBreathRateHandler)
 
 // HRV Channel Setup
-    getHrvChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getHrv")
+    getHrvChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetHrv")
     getHrvChannel!!.setStreamHandler(getHrvHandler)
 
 // Temperature Channel Setup
-    getTempChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getTemp")
+    getTempChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetTemp")
     getTempChannel!!.setStreamHandler(getTempHandler)
 
 // Movement State Channel Setup
-    getMovementStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getMovementState")
+    getMovementStateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetMovementState")
     getMovementStateChannel!!.setStreamHandler(getMovementStateHandler)
 
 // Training Channel Setup
-    getTrainingChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getTraining")
+    getTrainingChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetTraining")
     getTrainingChannel!!.setStreamHandler(getTrainingHandler)
 
 // Sleep Action Channel Setup
-    getSleepActionChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getSleepAction")
+    getSleepActionChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetSleepAction")
     getSleepActionChannel!!.setStreamHandler(getSleepActionHandler)
 
 // Steps Category Channel Setup
-    getStepsCategoryChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getStepsCategory")
+    getStepsCategoryChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetStepsCategory")
     getStepsCategoryChannel!!.setStreamHandler(getStepsCategoryHandler)
 
 // Step Change Channel Setup
-    getStepChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getStepChange")
+    getStepChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetStepChange")
     getStepChangeChannel!!.setStreamHandler(getStepChangeHandler)
 
 // Sleep Change Channel Setup
-    getSleepChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getSleepChange")
+    getSleepChangeChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetSleepChange")
     getSleepChangeChannel!!.setStreamHandler(getSleepChangeHandler)
 
 // Heart Rate Channel Setup
-    getHeartRateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getHeartRate")
+    getHeartRateChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetHeartRate")
     getHeartRateChannel!!.setStreamHandler(getHeartRateHandler)
 
 // Blood Pressure Channel Setup
-    getBloodPressureChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBloodPressure")
+    getBloodPressureChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetBloodPressure")
     getBloodPressureChannel!!.setStreamHandler(getBloodPressureHandler)
 
 // Blood Oxygen Channel Setup
-    getBloodOxygenChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getBloodOxygen")
+    getBloodOxygenChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetBloodOxygen")
     getBloodOxygenChannel!!.setStreamHandler(getBloodOxygenHandler)
 
 // ECG Channel Setup
-    getECGChannel = EventChannel(flutterPluginBinding.binaryMessenger, "getECG")
+    getECGChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetECG")
     getECGChannel!!.setStreamHandler(getECGHandler)
 
 

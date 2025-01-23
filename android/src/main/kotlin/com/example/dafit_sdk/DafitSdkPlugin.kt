@@ -409,6 +409,12 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   }
 
+  fun sendToMainUI( event: EventChannel.EventSink?, map: MutableMap<String, Any?>) {
+    Handler(Looper.getMainLooper()).post {
+      event?.success(map)
+    }
+  }
+
   override fun onMethodCall(call: MethodCall, result: Result) {
     when (call.method){
       "connect" -> {
@@ -563,6 +569,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
               override fun onDeviceBattery(battery: Int) {
                 Log.d(TAG, "battery: $battery%")
+                var map = HashMap<String, Any?>()
+                map["battery"] = battery
+                sendToMainUI(getBatteryLevelSink, map)
               }
             })
             mBleConnection!!.queryDeviceBattery()
@@ -1382,9 +1391,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
       }
 
-      Handler(Looper.getMainLooper()).post {
-        connectionStateSink?.success(map)
-      }
+      sendToMainUI(connectionStateSink, map)
 
       updateConnectState(state)
     })

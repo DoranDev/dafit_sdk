@@ -330,6 +330,25 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onCancel(o: Any?) {}
   }
 
+  private var getContactChannel: EventChannel? = null
+  private var getContactSink: EventChannel.EventSink? = null
+  private val getContactHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getContactSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+  private var getFindPhoneChannel: EventChannel? = null
+  private var getFindPhoneSink: EventChannel.EventSink? = null
+  private val getFindPhoneHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      getFindPhoneSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
+
   fun getBleClient(context: Context): CRPBleClient {
     return mBleClient
   }
@@ -407,6 +426,15 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     getECGChannel!!.setStreamHandler(getECGHandler)
 
 
+// Contact Channel Setup
+    getContactChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetContact")
+    getContactChannel!!.setStreamHandler(getContactHandler)
+
+// Find Phone Channel Setup
+    getFindPhoneChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetFindPhone")
+    getFindPhoneChannel!!.setStreamHandler(getFindPhoneHandler)
+
+
   }
 
   fun sendToMainUI( event: EventChannel.EventSink?, map: MutableMap<String, Any?>) {
@@ -427,6 +455,18 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       "disconnect" -> {
         if (mBleDevice != null) {
           mBleDevice!!.disconnect()
+        }
+      }
+      "isConnected" -> {
+        if (mBleDevice != null) {
+         val res = mBleDevice!!.isConnected
+          result.success(res)
+        }
+      }
+      "createBond" -> {
+        if (mBleDevice != null) {
+          val res = mBleDevice!!.bluetoothDevice.createBond()
+          result.success(res)
         }
       }
       else -> {
@@ -1478,6 +1518,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private val mStockChangeListener: CRPStockChangeListener = object : CRPStockChangeListener {
     override fun onSupportStockCount(i: Int) {
       Log.d(TAG,"onSupportStockCount：$i")
+      var map =   HashMap<String, Any?>()
+      map["onSupportStockCount"] = i
+      sendToMainUI(getStockChangeSink, map)
     }
 
     override fun onUpdateStockChange() {
@@ -1489,14 +1532,25 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     object : CRPQuickResponsesChangeListener {
       override fun onQuickResponsesCount(info: CRPQuickResponsesCountInfo) {
         Log.d(TAG,"onQuickResponsesCount：$info")
+        var map =   HashMap<String, Any?>()
+        val jsonResult = gson.toJson(info)
+        map["onQuickResponsesCount"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+        sendToMainUI(getQuickResponsesSink, map)
       }
 
       override fun onQuickResponsesDetail(info: CRPQuickResponsesDetailInfo) {
         Log.d(TAG,"onQuickResponsesDetail：$info")
+        var map =   HashMap<String, Any?>()
+        val jsonResult = gson.toJson(info)
+        map["onQuickResponsesDetail"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+        sendToMainUI(getQuickResponsesSink, map)
       }
 
       override fun onSendSms(msg: String) {
         Log.d(TAG,"onSendSms：$msg")
+        var map =   HashMap<String, Any?>()
+        map["onSendSms"] = msg
+        sendToMainUI(getQuickResponsesSink, map)
       }
     }
 
@@ -1504,18 +1558,32 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     object : CRPBreathRateChangeListener {
       override fun onBreathRate(breathRate: Int) {
         Log.d(TAG,"onBreathRate：$breathRate")
+        var map =   HashMap<String, Any?>()
+        map["onBreathRate"] = breathRate
+        sendToMainUI(getBreathRateSink, map)
       }
 
       override fun onHistoryBreathRate(list: List<CRPHistoryBreathRateInfo>) {
         Log.d(TAG,"onHistoryBreathRate：$list")
+        var map =   HashMap<String, Any?>()
+        val jsonResult = gson.toJson(list)
+        map["onHistoryBreathRate"] = gson.toJson(gson.fromJson(jsonResult, List::class.java))
+        sendToMainUI(getBreathRateSink, map)
       }
 
       override fun onTimingBreathRateState(enable: Boolean) {
         Log.d(TAG,"onTimingBreathRateState：$enable")
+        var map =   HashMap<String, Any?>()
+        map["onTimingBreathRateState"] = enable
+        sendToMainUI(getBreathRateSink, map)
       }
 
       override fun onTimingBreathRate(info: CRPBreathRateInfo) {
         Log.d(TAG,"onTimingBreathRate：$info")
+        var map =   HashMap<String, Any?>()
+        val jsonResult = gson.toJson(info)
+        map["onTimingBreathRate"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+        sendToMainUI(getBreathRateSink, map)
       }
     }
 
@@ -1527,6 +1595,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onRealRri activeLevel: $activeLevel"
       )
+      var map =   HashMap<String, Any?>()
+      map["onRealRri"] = rri
+      map["onRealRriActiveLevel"] = activeLevel
+      sendToMainUI(getHrvSink, map)
     }
 
     override fun onMeasureInterval(interval: Int) {
@@ -1534,6 +1606,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onMeasureInterval: $interval"
       )
+      var map =   HashMap<String, Any?>()
+      map["onMeasureInterval"] = interval
+      sendToMainUI(getHrvSink, map)
     }
 
     override fun onMeasureCount(dayIndex: Int, count: Int) {
@@ -1541,6 +1616,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onMeasureCount: $dayIndex-$count"
       )
+      var map =   HashMap<String, Any?>()
+      map["onMeasureCountDayIndex"] = dayIndex
+      map["onMeasureCountCount"] = count
+      sendToMainUI(getHrvSink, map)
     }
 
     override fun onHrvChange(info: CRPHrvInfo) {
@@ -1548,6 +1627,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onHrvChange: " + info.rriList.toString()
       )
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onHrvChange"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getHrvSink, map)
     }
 
     override fun onMeasureResult(dayIndex: Int, index: Int, info: CRPHrvInfo) {
@@ -1559,6 +1642,12 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onMeasureResult: " + info.rriList.toString()
       )
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onMeasureResultDayIndex"] = dayIndex
+      map["onMeasureResultIndex"] = index
+      map["onMeasureResultInfo"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getHrvSink, map)
     }
   }
 
@@ -1567,10 +1656,16 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   private val mContactListener: CRPContactListener = object : CRPContactListener {
     override fun onSavedSuccess(id: Int) {
       Log.d(TAG, "onSavedSuccess: $id")
+      var map =   HashMap<String, Any?>()
+      map["onSavedSuccess"] = id
+      sendToMainUI(getContactSink, map)
     }
 
     override fun onSavedFail(id: Int) {
       Log.d(TAG, "onSavedFail: $id")
+      var map =   HashMap<String, Any?>()
+      map["onSavedFail"] = id
+      sendToMainUI(getContactSink, map)
     }
   }
 
@@ -1581,14 +1676,23 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onContinueState: $state"
       )
+      var map =   HashMap<String, Any?>()
+      map["onContinueState"] = state
+      sendToMainUI(getTempSink, map)
     }
 
     override fun onMeasureTemp(temp: Float) {
       Log.d(TAG, "onMeasureTemp: $temp")
+      var map =   HashMap<String, Any?>()
+      map["onMeasureTemp"] = temp
+      sendToMainUI(getTempSink, map)
     }
 
     override fun onMeasureState(state: Boolean) {
       Log.d(TAG, "onTimingState: $state")
+      var map =   HashMap<String, Any?>()
+      map["onTimingState"] = state
+      sendToMainUI(getTempSink, map)
     }
 
     override fun onContinueTemp(info: CRPTempInfo) {
@@ -1597,6 +1701,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onTimingMeasureTemp: " + info.tempList.toString()
       )
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onContinueTemp"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getTempSink, map)
     }
   }
 
@@ -1606,16 +1714,30 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onMeasureState: $state"
       )
+      var map =   HashMap<String, Any?>()
+      map["onMeasureState"] = state
+      sendToMainUI(getMovementStateSink, map)
     }
 
     override fun onMeasuring(i: Int) {
+      Log.d(TAG,"onMeasuring:$i")
+      var map =   HashMap<String, Any?>()
+      map["onMeasuring"] = i
+      sendToMainUI(getMovementStateSink, map)
     }
 
     override fun onStartSuccess(i: Int) {
       Log.d(TAG,"onStartSuccess:$i")
+      var map =   HashMap<String, Any?>()
+      map["onStartSuccess"] = i
+      sendToMainUI(getMovementStateSink, map)
     }
 
     override fun onStartFailed() {
+      Log.d(TAG,"onStartFailed")
+      var map =   HashMap<String, Any?>()
+      map["onStartFailed"] = true
+      sendToMainUI(getMovementStateSink, map)
     }
   }
 
@@ -1657,18 +1779,26 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
   var mSleepActionChangeListener: CRPSleepActionChangeListener =
     CRPSleepActionChangeListener { info ->
-      val hour = info.hour
+//      val hour = info.hour
+//      Log.d(
+//        TAG,
+//        "onSleepActionChange Hour: $hour"
+//      )
+//      val actionList = info.actionList
+//      for (integer in actionList) {
+//        Log.d(
+//          TAG,
+//          "onSleepActionChange action: $integer"
+//        )
+//      }
       Log.d(
         TAG,
-        "onSleepActionChange Hour: $hour"
+        "onSleepActionChange: $info"
       )
-      val actionList = info.actionList
-      for (integer in actionList) {
-        Log.d(
-          TAG,
-          "onSleepActionChange action: $integer"
-        )
-      }
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onSleepActionChange"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getSleepActionSink, map)
     }
 
 
@@ -1679,11 +1809,19 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onStepsCategoryChange: $stepsList"
       )
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onStepsCategoryChange"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getStepsCategorySink, map)
     }
 
   var mStepChangeListener: CRPStepChangeListener = object : CRPStepChangeListener {
     override fun onStepChange(info: CRPStepInfo) {
       Log.d(TAG, "onStepChange: $info")
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onStepChange"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getStepChangeSink, map)
     }
 
     override fun onHistoryStepChange(historyDay: CRPHistoryDay, info: CRPStepInfo) {
@@ -1691,6 +1829,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onPastStepChange: " + historyDay.value + " - " + info.toString()
       )
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onPastStepChange"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getStepChangeSink, map)
     }
   }
 
@@ -1698,6 +1840,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onSleepChange(info: CRPSleepInfo) {
       val details = info.details ?: return
       Log.d(TAG, "onSleepChange: $info")
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onSleepChange"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getSleepChangeSink, map)
     }
 
     override fun onHistorySleepChange(historyDay: CRPHistoryDay, info: CRPSleepInfo) {
@@ -1705,6 +1851,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onHistorySleepChange: $historyDay - $info"
       )
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onHistorySleepChange"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getSleepChangeSink, map)
     }
 
     override fun onHistoryNapSleepChange(historyDay: CRPHistoryDay, list: List<CRPNapSleepInfo>) {
@@ -1712,12 +1862,19 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onHistoryNapSleepChange: " + historyDay + " - " + list.size
       )
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(list)
+      map["onHistoryNapSleepChange"] = gson.toJson(gson.fromJson(jsonResult, List::class.java))
+      sendToMainUI(getSleepChangeSink, map)
     }
   }
 
   var mHeartRateChangListener: CRPHeartRateChangeListener = object : CRPHeartRateChangeListener {
     override fun onMeasuring(rate: Int) {
       Log.d(TAG, "onMeasuring: $rate")
+      var map =   HashMap<String, Any?>()
+      map["onMeasuring"] = rate
+      sendToMainUI(getHeartRateSink, map)
     }
 
     override fun onOnceMeasureComplete(rate: Int) {
@@ -1725,6 +1882,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "onOnceMeasureComplete: $rate"
       )
+      var map =   HashMap<String, Any?>()
+      map["onOnceMeasureComplete"] = rate
+      sendToMainUI(getHeartRateSink, map)
     }
 
     override fun onHistoryHeartRate(list: List<CRPHistoryHeartRateInfo>) {
@@ -1732,6 +1892,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         Log.d(TAG, "onHistoryHeartRate: " + info.date)
         Log.d(TAG, "onHistoryHeartRate: " + info.hr)
       }
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(list)
+      map["onHistoryHeartRate"] = gson.toJson(gson.fromJson(jsonResult, List::class.java))
+      sendToMainUI(getHeartRateSink, map)
     }
 
     override fun onMeasureComplete(type: CRPHistoryDynamicRateType, info: CRPHeartRateInfo) {
@@ -1745,6 +1909,12 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       )
 
       mBleConnection!!.queryMovementHeartRate()
+      var map =   HashMap<String, Any?>()
+      val jsonResultType = gson.toJson(type)
+      val jasonResultInfo = gson.toJson(info)
+      map["onMeasureCompleteType"] = gson.toJson(gson.fromJson(jsonResultType, HashMap::class.java))
+      map["onMeasureCompleteInfo"] = gson.toJson(gson.fromJson(jasonResultInfo, HashMap::class.java))
+      sendToMainUI(getHeartRateSink, map)
     }
 
     override fun on24HourMeasureResult(info: CRPHeartRateInfo) {
@@ -1752,6 +1922,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         TAG,
         "on24HourMeasureResult: $info"
       )
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["on24HourMeasureResult"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getHeartRateSink, map)
     }
 
     override fun onMovementMeasureResult(list: List<CRPMovementHeartRateInfo>) {
@@ -1763,6 +1937,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           )
         }
       }
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(list)
+      map["onMovementMeasureResult"] = gson.toJson(gson.fromJson(jsonResult, List::class.java))
+      sendToMainUI(getHeartRateSink, map)
     }
   }
 
@@ -1773,10 +1951,17 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           TAG,
           "onContinueState: $state"
         )
+        var map =   HashMap<String, Any?>()
+        map["onContinueState"] = state
+        sendToMainUI(getBloodPressureSink, map)
       }
 
       override fun onBloodPressureChange(sbp: Int, dbp: Int) {
         Log.d(TAG, "sbp: $sbp,dbp: $dbp")
+        var map =   HashMap<String, Any?>()
+        map["onBloodPressureChangeSBP"] = sbp
+        map["onBloodPressureChangeDBP"] = dbp
+        sendToMainUI(getBloodPressureSink, map)
       }
 
       override fun onHistoryBloodPressure(list: List<CRPHistoryBloodPressureInfo>) {
@@ -1794,6 +1979,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             "onHistoryBloodPressure: " + info.dbp
           )
         }
+        var map =   HashMap<String, Any?>()
+        val jsonResult = gson.toJson(list)
+        map["onHistoryBloodPressure"] = gson.toJson(gson.fromJson(jsonResult, List::class.java))
+        sendToMainUI(getBloodPressureSink, map)
       }
 
       override fun onContinueBloodPressure(info: CRPBloodPressureInfo) {
@@ -1813,6 +2002,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             "onContinueBloodPressure size: $emptCount"
           )
         }
+        var map =   HashMap<String, Any?>()
+        val jsonResult = gson.toJson(info)
+        map["onContinueBloodPressure"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+        sendToMainUI(getBloodPressureSink, map)
       }
     }
 
@@ -1823,6 +2016,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           TAG,
           "onContinueState: $state"
         )
+        var map =   HashMap<String, Any?>()
+        map["onContinueState"] = state
+        sendToMainUI(getBloodOxygenSink, map)
       }
 
       override fun onTimingMeasure(interval: Int) {
@@ -1830,10 +2026,15 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           TAG,
           "onTimingMeasure: $interval"
         )
+        var map =   HashMap<String, Any?>()
+        map["onTimingMeasure"] = interval
+        sendToMainUI(getBloodOxygenSink, map)
       }
 
       override fun onBloodOxygen(bloodOxygen: Int) {
-
+        var map =   HashMap<String, Any?>()
+        map["onBloodOxygen"] = bloodOxygen
+        sendToMainUI(getBloodOxygenSink, map)
       }
 
       override fun onHistoryBloodOxygen(list: List<CRPHistoryBloodOxygenInfo>) {
@@ -1844,6 +2045,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           )
           Log.d(TAG, "onHistoryBloodOxygen: " + info.bo)
         }
+        var map =   HashMap<String, Any?>()
+        val jsonResult = gson.toJson(list)
+        map["onHistoryBloodOxygen"] = gson.toJson(gson.fromJson(jsonResult, List::class.java))
+        sendToMainUI(getBloodOxygenSink, map)
       }
 
       override fun onContinueBloodOxygen(info: CRPBloodOxygenInfo) {
@@ -1856,6 +2061,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             TAG,
             "onContinueBloodOxygen: " + info.list.toString()
           )
+          var map =   HashMap<String, Any?>()
+          val jsonResult = gson.toJson(info)
+          map["onContinueBloodOxygen"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+          sendToMainUI(getBloodOxygenSink, map)
         }
       }
     }
@@ -1865,22 +2074,37 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       for (i in ecg.indices) {
         Log.d(TAG, "ecg: " + ecg[i])
       }
+      var map =   HashMap<String, Any?>()
+      map["onECGChange"] = ecg
+      sendToMainUI(getECGSink, map)
     }
 
     override fun onMeasureComplete() {
       Log.d(TAG, "onMeasureComplete")
+      var map =   HashMap<String, Any?>()
+      map["onMeasureComplete"] = true
+      sendToMainUI(getECGSink, map)
     }
 
     override fun onTransCpmplete(date: Date) {
       Log.d(TAG, "onTransCpmplete")
+      var map =   HashMap<String, Any?>()
+      map["onTransCpmplete"] = date
+      sendToMainUI(getECGSink, map)
     }
 
     override fun onCancel() {
       Log.d(TAG, "onCancel")
+      var map =   HashMap<String, Any?>()
+      map["onCancel"] = true
+      sendToMainUI(getECGSink, map)
     }
 
     override fun onFail() {
       Log.d(TAG, "onFail")
+      var map =   HashMap<String, Any?>()
+      map["onFail"] = true
+      sendToMainUI(getECGSink, map)
     }
   }
 
@@ -1893,10 +2117,16 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
   var mFindPhoneListener: CRPFindPhoneListener = object : CRPFindPhoneListener {
     override fun onFindPhone() {
       Log.d(TAG, "onFindPhone")
+      var map =   HashMap<String, Any?>()
+      map["onFindPhone"] = true
+      sendToMainUI(getFindPhoneSink, map)
     }
 
     override fun onFindPhoneComplete() {
       Log.d(TAG, "onFindPhoneComplete")
+      var map =   HashMap<String, Any?>()
+      map["onFindPhoneComplete"] = true
+      sendToMainUI(getFindPhoneSink, map)
     }
   }
 
@@ -1904,7 +2134,6 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     object : CRPBleFirmwareUpgradeListener {
       override fun onFirmwareDownloadStarting() {
         Log.d(TAG, "onFirmwareDownloadStarting")
-
       }
 
       override fun onFirmwareDownloadComplete() {

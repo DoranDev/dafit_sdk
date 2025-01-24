@@ -17,6 +17,18 @@ class DafitSdk {
     await _methodChannel.invokeMethod('disconnect');
   }
 
+  /// Checks if a device is connected.
+  Future<bool?> isConnected() async {
+    final res = await _methodChannel.invokeMethod('isConnected');
+    return res;
+  }
+
+  /// Creates a bond with the device.
+  Future<bool?> createBond() async {
+    final res = await _methodChannel.invokeMethod('createBond');
+    return res;
+  }
+
   /// Queries the physiological period information.
   Future<void> queryPhysiologicalPeriod() async {
     await _methodChannel.invokeMethod('query_physiologcal_period');
@@ -283,4 +295,16 @@ class DafitSdk {
   final EventChannel _getECGChannel = const EventChannel('dafitGetECG');
   Stream get ecgStream =>
       _getECGChannel.receiveBroadcastStream(_getECGChannel.name).cast();
+
+  // Contacts stream
+  final EventChannel _getContactChannel =
+      const EventChannel('dafitGetContacts');
+  Stream get contactsStream =>
+      _getContactChannel.receiveBroadcastStream(_getContactChannel.name).cast();
+
+  //FindPhones stream
+  final EventChannel _findPhonesChannel =
+      const EventChannel('dafitGetFindPhone');
+  Stream get findPhonesStream =>
+      _findPhonesChannel.receiveBroadcastStream(_findPhonesChannel.name).cast();
 }

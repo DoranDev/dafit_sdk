@@ -29,6 +29,11 @@ class DafitSdk {
     return res;
   }
 
+  /// Finds the band device.
+  Future<void> findBand() async {
+    await _methodChannel.invokeMethod('find_band');
+  }
+
   /// Queries the physiological period information.
   Future<void> queryPhysiologicalPeriod() async {
     await _methodChannel.invokeMethod('query_physiologcal_period');
@@ -174,6 +179,400 @@ class DafitSdk {
   /// Sends weather forecast information.
   Future<void> sendFutureWeather() async {
     await _methodChannel.invokeMethod('send_future_weather');
+  }
+
+  /// Queries the last ECG measurement data.
+  Future<void> queryLastEcg() async {
+    await _methodChannel.invokeMethod('query_last_ecg');
+  }
+
+  /// Queries today's steps category.
+  Future<void> queryTodayStepsCategory() async {
+    await _methodChannel.invokeMethod('query_today_steps_category');
+  }
+
+  /// Queries yesterday's steps category.
+  Future<void> queryYesterdayStepsCategory() async {
+    await _methodChannel.invokeMethod('query_yesterday_steps_category');
+  }
+
+  /// Queries supported watch faces.
+  Future<void> querySupportWatchFace() async {
+    await _methodChannel.invokeMethod('query_support_watch_face');
+  }
+
+  /// Queries watch face store information.
+  Future<void> queryWatchFaceStore() async {
+    await _methodChannel.invokeMethod('query_watch_face_store');
+  }
+
+  /// Queries watch face store tags.
+  Future<void> queryWatchFaceStoreTag() async {
+    await _methodChannel.invokeMethod('query_watch_face_store_tag');
+  }
+
+  /// Queries watch face store list.
+  Future<void> queryWatchFaceStoreList() async {
+    await _methodChannel.invokeMethod('query_watch_face_store_list');
+  }
+
+  /// Queries watch face details.
+  Future<void> queryWatchFaceDetail() async {
+    await _methodChannel.invokeMethod('query_watch_face_detail');
+  }
+
+  /// Queries watch face information.
+  Future<void> queryWatchFace() async {
+    await _methodChannel.invokeMethod('query_watch_face');
+  }
+
+  /// Queries sleep action data.
+  Future<void> querySleepAction() async {
+    await _methodChannel.invokeMethod('query_sleep_action');
+  }
+
+  /// Sends band UI information.
+  Future<void> sendBandUi() async {
+    await _methodChannel.invokeMethod('send_band_ui');
+  }
+
+  /// Queries quick contacts configuration.
+  Future<void> queryQuickContacts() async {
+    await _methodChannel.invokeMethod('query_quick_contacts');
+  }
+
+  /// Enables HRV (Heart Rate Variability) measurement.
+  Future<void> enableHrv() async {
+    await _methodChannel.invokeMethod('enable_hrv');
+  }
+
+  /// Disables HRV (Heart Rate Variability) measurement.
+  Future<void> disableHrv() async {
+    await _methodChannel.invokeMethod('disable_hrv');
+  }
+
+  /// Queries HRV measurement interval.
+  Future<void> queryHrvMeasureInterval() async {
+    await _methodChannel.invokeMethod('query_hrv_measure_interval');
+  }
+
+  /// Queries HRV measurement count.
+  Future<void> queryHrvMeasureCount() async {
+    await _methodChannel.invokeMethod('query_hrv_measure_count');
+  }
+
+  /// Queries HRV measurement result.
+  Future<void> queryHrvMeasureResult() async {
+    await _methodChannel.invokeMethod('query_hrv_measure_result');
+  }
+
+  /// Enables continuous blood pressure monitoring.
+  Future<void> enableContinueBloodPressure() async {
+    await _methodChannel.invokeMethod('enable_continue_blood_pressure');
+  }
+
+  /// Disables continuous blood pressure monitoring.
+  Future<void> disableContinueBloodPressure() async {
+    await _methodChannel.invokeMethod('disable_continue_blood_pressure');
+  }
+
+  /// Queries continuous blood pressure state.
+  Future<void> queryContinueBloodPressureState() async {
+    await _methodChannel.invokeMethod('query_continue_blood_pressure_state');
+  }
+
+  /// Queries last 24-hour blood pressure data.
+  Future<void> queryLast24HourBloodPressure() async {
+    await _methodChannel.invokeMethod('query_continue_blood_pressure');
+  }
+
+  /// Enables continuous blood oxygen monitoring.
+  Future<void> enableContinueBloodOxygen() async {
+    await _methodChannel.invokeMethod('enable_continue_blood_oxygen');
+  }
+
+  /// Disables continuous blood oxygen monitoring.
+  Future<void> disableContinueBloodOxygen() async {
+    await _methodChannel.invokeMethod('disable_continue_blood_oxygen');
+  }
+
+  /// Queries continuous blood oxygen state.
+  Future<void> queryContinueBloodOxygenState() async {
+    await _methodChannel.invokeMethod('query_continue_blood_oxygen_state');
+  }
+
+  /// Queries last 24-hour blood oxygen data.
+  Future<void> queryLast24HourBloodOxygen() async {
+    await _methodChannel.invokeMethod('query_continue_blood_oxygen');
+  }
+
+  /// Enables continuous temperature monitoring.
+  Future<void> enableContinueTemp() async {
+    await _methodChannel.invokeMethod('enable_continue_temp');
+  }
+
+  /// Disables continuous temperature monitoring.
+  Future<void> disableContinueTemp() async {
+    await _methodChannel.invokeMethod('disable_continue_temp');
+  }
+
+  /// Queries continuous temperature state.
+  Future<void> queryContinueTempState() async {
+    await _methodChannel.invokeMethod('query_continue_temp_state');
+  }
+
+  /// Queries last 24-hour temperature data.
+  Future<void> queryLast24HourTemp() async {
+    await _methodChannel.invokeMethod('query_continue_temp');
+  }
+
+  /// Starts breath rate measurement.
+  Future<void> startMeasureBreathRate() async {
+    await _methodChannel.invokeMethod('start_measure_breath_rate');
+  }
+
+  /// Stops breath rate measurement.
+  Future<void> stopMeasureBreathRate() async {
+    await _methodChannel.invokeMethod('stop_measure_breath_rate');
+  }
+
+  /// Queries historical breath rate data.
+  Future<void> queryHistoryBreathRate() async {
+    await _methodChannel.invokeMethod('query_history_breath_rate');
+  }
+
+  /// Enables timing breath rate measurement.
+  Future<void> enableTimingBreathRate() async {
+    await _methodChannel.invokeMethod('enable_timing_breath_rate');
+  }
+
+  /// Disables timing breath rate measurement.
+  Future<void> disableTimingBreathRate() async {
+    await _methodChannel.invokeMethod('disable_timing_breath_rate');
+  }
+
+  /// Queries timing breath rate data.
+  Future<void> queryTimingBreathRate() async {
+    await _methodChannel.invokeMethod('query_timing_breath_rate');
+  }
+
+  /// Queries timing breath rate state.
+  Future<void> queryTimingBreathRateState() async {
+    await _methodChannel.invokeMethod('query_timing_breath_rate_state');
+  }
+
+  /// Queries quick responses count.
+  Future<void> queryQuickResponsesCount() async {
+    await _methodChannel.invokeMethod('query_quick_responses_count');
+  }
+
+  /// Enables quick responses.
+  Future<void> enableQuickResponses() async {
+    await _methodChannel.invokeMethod('enable_quick_responses');
+  }
+
+  /// Disables quick responses.
+  Future<void> disableQuickResponses() async {
+    await _methodChannel.invokeMethod('disable_quick_responses');
+  }
+
+  /// Queries quick responses.
+  Future<void> queryQuickResponses() async {
+    await _methodChannel.invokeMethod('query_quick_responses');
+  }
+
+  /// Sends quick responses.
+  Future<void> sendQuickResponses(String message) async {
+    await _methodChannel
+        .invokeMethod('send_quick_responses', {'message': message});
+  }
+
+  /// Queries support for stock information.
+  Future<void> querySupportStock() async {
+    await _methodChannel.invokeMethod('query_support_stock');
+  }
+
+  /// Sends stock information.
+  Future<void> sendStock(String abbreviation, String code, String currency,
+      String exchange) async {
+    await _methodChannel.invokeMethod('send_stock', {
+      'abbreviation': abbreviation,
+      'code': code,
+      'currency': currency,
+      'exchange': exchange,
+    });
+  }
+
+  /// Sends stock price information.
+  Future<void> sendStockPrice(
+      int id, double price, double change, double changePercent) async {
+    await _methodChannel.invokeMethod('send_stock_price', {
+      'id': id,
+      'price': price,
+      'change': change,
+      'changePercent': changePercent,
+    });
+  }
+
+  /// Checks firmware version.
+  Future<void> checkFirmware() async {
+    await _methodChannel.invokeMethod('check_firmware');
+  }
+
+  /// Upgrades firmware.
+  Future<void> firmwareUpgrade() async {
+    await _methodChannel.invokeMethod('firmware_upgrade');
+  }
+
+  /// Queries alarm clock settings.
+  Future<void> queryAlarmClock() async {
+    await _methodChannel.invokeMethod('query_alarm_clock');
+  }
+
+  /// Sends alarm clock settings.
+  Future<void> sendAlarmClock(int hour, int minute, int repeatMode,
+      DateTime date, bool isEnable) async {
+    await _methodChannel.invokeMethod('send_alarm_clock', {
+      'hour': hour,
+      'minute': minute,
+      'repeatMode': repeatMode,
+      'date': date.millisecondsSinceEpoch,
+      'isEnable': isEnable,
+    });
+  }
+
+  /// Sends quick view time settings.
+  Future<void> sendQuickViewTime(
+      int startHour, int startMinute, int endHour, int endMinute) async {
+    await _methodChannel.invokeMethod('send_quickview_time', {
+      'startHour': startHour,
+      'startMinute': startMinute,
+      'endHour': endHour,
+      'endMinute': endMinute,
+    });
+  }
+
+  /// Queries quick view time settings.
+  Future<void> queryQuickViewTime() async {
+    await _methodChannel.invokeMethod('query_quickview_time');
+  }
+
+  /// Sends device language settings.
+  Future<void> sendDeviceLanguage(String language) async {
+    await _methodChannel
+        .invokeMethod('send_device_language', {'language': language});
+  }
+
+  /// Queries device language settings.
+  Future<void> queryDeviceLanguage() async {
+    await _methodChannel.invokeMethod('query_device_language');
+  }
+
+  /// Sends other message settings.
+  Future<void> sendOtherMessage() async {
+    await _methodChannel.invokeMethod('send_other_message');
+  }
+
+  /// Queries other message settings.
+  Future<void> queryOtherMessage() async {
+    await _methodChannel.invokeMethod('query_other_message');
+  }
+
+  /// Sends sedentary reminder settings.
+  Future<void> sendSedentaryReminder(bool enable) async {
+    await _methodChannel
+        .invokeMethod('send_sedentary_reminder', {'enable': enable});
+  }
+
+  /// Queries sedentary reminder settings.
+  Future<void> querySedentaryReminder() async {
+    await _methodChannel.invokeMethod('query_sedentary_reminder');
+  }
+
+  /// Sends display watch face settings.
+  Future<void> sendDisplayWatchFace(int type) async {
+    await _methodChannel
+        .invokeMethod('send_display_watch_face', {'type': type});
+  }
+
+  /// Queries display watch face settings.
+  Future<void> queryDisplayWatchFace() async {
+    await _methodChannel.invokeMethod('query_display_watch_face');
+  }
+
+  /// Synchronizes last heart rate data.
+  Future<void> syncLastHeartRate() async {
+    await _methodChannel.invokeMethod('sync_last_heart_rate');
+  }
+
+  /// Queries today's heart rate data.
+  Future<void> queryTodayHeartRate() async {
+    await _methodChannel.invokeMethod('query_today_hreat_rate');
+  }
+
+  /// Queries yesterday's heart rate data.
+  Future<void> queryYesterdayHeartRate() async {
+    await _methodChannel.invokeMethod('query_yesterday_hreat_rate');
+  }
+
+  /// Queries movement heart rate data.
+  Future<void> queryMovementHeartRate() async {
+    await _methodChannel.invokeMethod('query_movement_hreat_rate');
+  }
+
+  /// Sends device version information.
+  Future<void> sendDeviceVersion(String version) async {
+    await _methodChannel
+        .invokeMethod('send_device_version', {'version': version});
+  }
+
+  /// Queries device version information.
+  Future<void> queryDeviceVersion() async {
+    await _methodChannel.invokeMethod('query_device_version');
+  }
+
+  /// Sends breathing light settings.
+  Future<void> sendBreathingLight(bool enable) async {
+    await _methodChannel
+        .invokeMethod('send_breathing_light', {'enable': enable});
+  }
+
+  /// Queries breathing light settings.
+  Future<void> queryBreathingLight() async {
+    await _methodChannel.invokeMethod('query_breathing_light');
+  }
+
+  /// Sends watch face layout settings.
+  Future<void> sendWatchFaceLayout(int timePosition, int timeTopContent,
+      int timeBottomContent, int textColor, String backgroundPictureMd5) async {
+    await _methodChannel.invokeMethod('send_watch_face_layout', {
+      'timePosition': timePosition,
+      'timeTopContent': timeTopContent,
+      'timeBottomContent': timeBottomContent,
+      'textColor': textColor,
+      'backgroundPictureMd5': backgroundPictureMd5,
+    });
+  }
+
+  /// Queries watch face layout settings.
+  Future<void> queryWatchFaceLayout() async {
+    await _methodChannel.invokeMethod('query_watch_face_layout');
+  }
+
+  /// Deletes stock information.
+  Future<void> deleteStock(int id) async {
+    await _methodChannel.invokeMethod('delete_stock', {'id': id});
+  }
+
+  /// Clears all stock information.
+  Future<void> clearStock() async {
+    await _methodChannel.invokeMethod('clear_stock');
+  }
+
+  /// Resets stock list.
+  Future<void> resetStockList(List<int> stockArray) async {
+    await _methodChannel
+        .invokeMethod('reset_stock_list', {'stockArray': stockArray});
   }
 
   // Connection state stream

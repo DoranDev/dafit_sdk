@@ -34,6 +34,11 @@ class DafitSdk {
     await _methodChannel.invokeMethod('find_band');
   }
 
+  Future<void> doNotDistrub({required bool isDoNotDistrub}) async {
+    await _methodChannel.invokeMethod(
+        'sendDoNotDistrubTime', {'isDoNotDistrub': isDoNotDistrub});
+  }
+
   /// Queries the physiological period information.
   Future<void> queryPhysiologicalPeriod() async {
     await _methodChannel.invokeMethod('query_physiologcal_period');

@@ -475,6 +475,22 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           return
         }
         when(call.method){
+          "sendDoNotDistrubTime" -> {
+            val isDoNotDistrub: Boolean? = call.argument<Boolean>("isDoNotDistrub")
+            var cRPPeriodTimeInfo = CRPPeriodTimeInfo()
+            if (isDoNotDistrub==true){
+              cRPPeriodTimeInfo.startMinute=1
+              cRPPeriodTimeInfo.startHour=0
+              cRPPeriodTimeInfo.endMinute=59
+              cRPPeriodTimeInfo.endHour=23;
+            }else{
+              cRPPeriodTimeInfo.startMinute=0
+              cRPPeriodTimeInfo.startHour=0
+              cRPPeriodTimeInfo.endMinute=0
+              cRPPeriodTimeInfo.endHour=0
+            }
+            mBleConnection!!.sendDoNotDistrubTime(cRPPeriodTimeInfo);
+          }
           "query_physiologcal_period" -> mBleConnection!!.queryPhysiologcalPeriod(CRPDevicePhysiologcalPeriodCallback { info ->
             Log.d(
               TAG,

@@ -491,6 +491,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             }
             mBleConnection!!.sendDoNotDistrubTime(cRPPeriodTimeInfo);
           }
+          "sendDisplayTime" -> {
+            val time = call.argument<Int>("time")
+            mBleConnection!!.sendDisplayTime(time!!)
+          }
           "query_physiologcal_period" -> mBleConnection!!.queryPhysiologcalPeriod(CRPDevicePhysiologcalPeriodCallback { info ->
             Log.d(
               TAG,

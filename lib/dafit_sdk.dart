@@ -39,6 +39,10 @@ class DafitSdk {
         'sendDoNotDistrubTime', {'isDoNotDistrub': isDoNotDistrub});
   }
 
+  Future<void> sendDisplayTime({required int time}) async {
+    await _methodChannel.invokeMethod('sendDisplayTime', {'time': time});
+  }
+
   /// Queries the physiological period information.
   Future<void> queryPhysiologicalPeriod() async {
     await _methodChannel.invokeMethod('query_physiologcal_period');

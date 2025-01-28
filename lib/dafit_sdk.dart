@@ -47,6 +47,10 @@ class DafitSdk {
     await _methodChannel.invokeMethod('sendTapToWakeState', {'enable': enable});
   }
 
+  Future<void> camera({required bool isOpen}) async {
+    await _methodChannel.invokeMethod('camera', {'isOpen': isOpen});
+  }
+
   /// Queries the physiological period information.
   Future<void> queryPhysiologicalPeriod() async {
     await _methodChannel.invokeMethod('query_physiologcal_period');
@@ -719,4 +723,8 @@ class DafitSdk {
       const EventChannel('dafitGetFindPhone');
   Stream get findPhonesStream =>
       _findPhonesChannel.receiveBroadcastStream(_findPhonesChannel.name).cast();
+
+  final EventChannel _cameraChannel = const EventChannel('dafitCamera');
+  Stream get cameraStream =>
+      _cameraChannel.receiveBroadcastStream(_cameraChannel.name).cast();
 }

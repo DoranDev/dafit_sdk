@@ -74,6 +74,7 @@ import com.crrepa.ble.conn.listener.CRPBleFirmwareUpgradeListener
 import com.crrepa.ble.conn.listener.CRPBloodOxygenChangeListener
 import com.crrepa.ble.conn.listener.CRPBloodPressureChangeListener
 import com.crrepa.ble.conn.listener.CRPBreathRateChangeListener
+import com.crrepa.ble.conn.listener.CRPCameraOperationListener
 import com.crrepa.ble.conn.listener.CRPContactListener
 import com.crrepa.ble.conn.listener.CRPDeviceBatteryListener
 import com.crrepa.ble.conn.listener.CRPFileTransListener
@@ -348,6 +349,15 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onCancel(o: Any?) {}
   }
 
+  private var cameraChannel: EventChannel? = null
+  private var cameraSink: EventChannel.EventSink? = null
+  private val cameraHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      cameraSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
 
   fun getBleClient(context: Context): CRPBleClient {
     return mBleClient
@@ -434,7 +444,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     getFindPhoneChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitGetFindPhone")
     getFindPhoneChannel!!.setStreamHandler(getFindPhoneHandler)
 
-
+// camera
+    cameraChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitCamera")
+    cameraChannel!!.setStreamHandler(cameraHandler)
   }
 
   fun sendToMainUI( event: EventChannel.EventSink?, map: MutableMap<String, Any?>) {
@@ -498,6 +510,32 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           "sendTapToWakeState" -> {
             val enable = call.argument<Boolean>("enable")
             mBleConnection!!.sendTapToWakeState(enable!!)
+          }
+          "sendQuickView" -> {
+            val enable = call.argument<Boolean>("enable")
+            mBleConnection!!.sendQuickView(enable!!)
+          }
+          "camera" -> {
+            val isOpen = call.argument<Boolean>("isOpen")
+            if(isOpen==true){
+              mBleConnection!!.enterCameraView()
+            }else{
+              mBleConnection!!.exitCameraView()
+            }
+            mBleConnection!!.setCameraOperationListener(object :CRPCameraOperationListener{
+              override fun onTakePhoto() {
+                var map = HashMap<String, Any?>()
+                map["onTakePhoto"] = true
+                cameraSink?.success(map)
+              }
+
+              override fun onExitCamera() {
+                var map = HashMap<String, Any?>()
+                map["onExitCamera"] = true
+                cameraSink?.success(map)
+              }
+
+            })
           }
           "query_physiologcal_period" -> mBleConnection!!.queryPhysiologcalPeriod(CRPDevicePhysiologcalPeriodCallback { info ->
             Log.d(

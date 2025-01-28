@@ -495,6 +495,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             val time = call.argument<Int>("time")
             mBleConnection!!.sendDisplayTime(time!!)
           }
+          "sendTapToWakeState" -> {
+            val enable = call.argument<Boolean>("enable")
+            mBleConnection!!.sendTapToWakeState(enable!!)
+          }
           "query_physiologcal_period" -> mBleConnection!!.queryPhysiologcalPeriod(CRPDevicePhysiologcalPeriodCallback { info ->
             Log.d(
               TAG,

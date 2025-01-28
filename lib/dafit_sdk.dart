@@ -43,6 +43,10 @@ class DafitSdk {
     await _methodChannel.invokeMethod('sendDisplayTime', {'time': time});
   }
 
+  Future<void> sendTapToWakeState({required bool enable}) async {
+    await _methodChannel.invokeMethod('sendTapToWakeState', {'enable': enable});
+  }
+
   /// Queries the physiological period information.
   Future<void> queryPhysiologicalPeriod() async {
     await _methodChannel.invokeMethod('query_physiologcal_period');

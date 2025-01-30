@@ -678,7 +678,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             })
             mBleConnection!!.queryDeviceBattery()
           }
-          "sync_time" -> mBleConnection!!.syncTime()
+          "sync_time" -> {
+            mBleConnection!!.syncTime()
+            mBleConnection!!.sendTimeSystem(CRPTimeSystemType.TIME_SYSTEM_24)
+          }
           "music_control" -> mBleConnection!!.setPhoneOperationListener(CRPPhoneOperationListener { type ->
             Log.d(
               TAG,

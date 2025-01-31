@@ -526,13 +526,13 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               override fun onTakePhoto() {
                 var map = HashMap<String, Any?>()
                 map["onTakePhoto"] = true
-                cameraSink?.success(map)
+                sendToMainUI(cameraSink, map)
               }
 
               override fun onExitCamera() {
                 var map = HashMap<String, Any?>()
                 map["onExitCamera"] = true
-                cameraSink?.success(map)
+                sendToMainUI(cameraSink, map)
               }
 
             })

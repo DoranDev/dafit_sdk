@@ -713,8 +713,7 @@ class DafitSdk {
       _getECGChannel.receiveBroadcastStream(_getECGChannel.name).cast();
 
   // Contacts stream
-  final EventChannel _getContactChannel =
-      const EventChannel('dafitGetContacts');
+  final EventChannel _getContactChannel = const EventChannel('dafitGetContact');
   Stream get contactsStream =>
       _getContactChannel.receiveBroadcastStream(_getContactChannel.name).cast();
 

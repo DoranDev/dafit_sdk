@@ -358,6 +358,15 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     override fun onCancel(o: Any?) {}
   }
 
+  private var onLoadingChannel: EventChannel? = null
+  private var onLoadingSink: EventChannel.EventSink? = null
+  private val onLoadingHandler = object : EventChannel.StreamHandler {
+    override fun onListen(arg: Any?, eventSink: EventChannel.EventSink?) {
+      onLoadingSink = eventSink
+    }
+    override fun onCancel(o: Any?) {}
+  }
+
 
   fun getBleClient(context: Context): CRPBleClient {
     return mBleClient
@@ -447,6 +456,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 // camera
     cameraChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitCamera")
     cameraChannel!!.setStreamHandler(cameraHandler)
+
+    onLoadingChannel = EventChannel(flutterPluginBinding.binaryMessenger, "onLoading")
+    onLoadingChannel!!.setStreamHandler(onLoadingHandler)
   }
 
   fun sendToMainUI( event: EventChannel.EventSink?, map: MutableMap<String, Any?>) {
@@ -777,10 +789,17 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           "find_band" -> //                mBleConnection!!.querySupportStress();
             mBleConnection!!.findDevice()
           "send_message" -> {
+            val message: String? = call.argument<String>("message")
+            val type: Int? = call.argument<Int>("type")
+            val versionCode: Int? = call.argument<Int>("versionCode")
             val messageInfo = CRPMessageInfo()
-            messageInfo.message = "test: Incoming video call"
-            messageInfo.type = CRPBleMessageType.MESSAGE_WHATSAPP
-            messageInfo.versionCode = 207
+            messageInfo.message = message
+            if (type != null) {
+              messageInfo.type = type
+            }else{
+              messageInfo.type = CRPBleMessageType.MESSAGE_OTHER
+            }
+            messageInfo.versionCode = versionCode
             messageInfo.isHs = false
             messageInfo.isSmallScreen = true
             mBleConnection!!.sendMessage(messageInfo)

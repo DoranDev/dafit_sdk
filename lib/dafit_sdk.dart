@@ -34,6 +34,14 @@ class DafitSdk {
     await _methodChannel.invokeMethod('find_band');
   }
 
+  Future<void> sendMessage(
+      {required String message,
+      required int type,
+      required int versionCode}) async {
+    await _methodChannel.invokeMethod('send_message',
+        {"message": message, "type": type, "versionCode": versionCode});
+  }
+
   Future<void> doNotDistrub({required bool isDoNotDistrub}) async {
     await _methodChannel.invokeMethod(
         'sendDoNotDistrubTime', {'isDoNotDistrub': isDoNotDistrub});
@@ -726,4 +734,8 @@ class DafitSdk {
   final EventChannel _cameraChannel = const EventChannel('dafitCamera');
   Stream get cameraStream =>
       _cameraChannel.receiveBroadcastStream(_cameraChannel.name).cast();
+
+  final EventChannel _onLoadingChannel = const EventChannel('onLoading');
+  Stream get onLoadingStream =>
+      _onLoadingChannel.receiveBroadcastStream(_onLoadingChannel.name).cast();
 }

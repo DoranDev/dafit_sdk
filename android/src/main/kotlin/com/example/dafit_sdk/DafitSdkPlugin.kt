@@ -799,7 +799,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             }else{
               messageInfo.type = CRPBleMessageType.MESSAGE_OTHER
             }
-            messageInfo.versionCode = versionCode
+            messageInfo.versionCode = versionCode!!
             messageInfo.isHs = false
             messageInfo.isSmallScreen = true
             mBleConnection!!.sendMessage(messageInfo)

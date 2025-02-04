@@ -59,6 +59,10 @@ class DafitSdk {
     await _methodChannel.invokeMethod('camera', {'isOpen': isOpen});
   }
 
+  Future<void> sendWatchFace({required String path}) async {
+    await _methodChannel.invokeMethod('sendWatchFace', {'path': path});
+  }
+
   /// Queries the physiological period information.
   Future<void> queryPhysiologicalPeriod() async {
     await _methodChannel.invokeMethod('query_physiologcal_period');

@@ -549,6 +549,50 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
             })
           }
+          "sendWatchFace" -> {
+            val path = call.argument<String>("path")
+            // Create a File object from the provided path
+            val file = File(path)
+
+            // Check if the file exists
+            if (!file.exists()){
+              Log.d(
+                TAG,
+                "file does not exist"
+              )
+              return
+            }
+            val watchFaceInfo =
+              CRPWatchFaceInfo(file, CRPWatchFaceInfo.WacthFaceType.JIELI)
+            mBleConnection!!.sendWatchFace(watchFaceInfo, object : CRPWatchFaceTransListener {
+              override fun onInstallStateChange(success: Boolean) {
+                Log.d(
+                  TAG,
+                  "onInstallStateChange: $success"
+                )
+              }
+
+              override fun onTransProgressStarting() {
+                Log.d(TAG, "onTransProgressStarting")
+              }
+
+              override fun onTransProgressChanged(percent: Int) {
+                Log.d(
+                  TAG,
+                  "onTransProgressChanged: $percent"
+                )
+              }
+
+              override fun onTransCompleted() {
+                Log.d(TAG, "onTransCompleted")
+//                mBleConnection!!.sendJieliWatchFaceId(watchfaceId, false)
+              }
+
+              override fun onError(type: Int) {
+                Log.d(TAG, "onError: $type")
+              }
+            }, 30)
+          }
           "query_physiologcal_period" -> mBleConnection!!.queryPhysiologcalPeriod(CRPDevicePhysiologcalPeriodCallback { info ->
             Log.d(
               TAG,

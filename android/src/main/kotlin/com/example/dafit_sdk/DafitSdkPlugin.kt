@@ -457,7 +457,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
     cameraChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitCamera")
     cameraChannel!!.setStreamHandler(cameraHandler)
 
-    onLoadingChannel = EventChannel(flutterPluginBinding.binaryMessenger, "onLoading")
+    onLoadingChannel = EventChannel(flutterPluginBinding.binaryMessenger, "dafitOnLoading")
     onLoadingChannel!!.setStreamHandler(onLoadingHandler)
   }
 

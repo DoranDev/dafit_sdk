@@ -739,7 +739,7 @@ class DafitSdk {
   Stream get cameraStream =>
       _cameraChannel.receiveBroadcastStream(_cameraChannel.name).cast();
 
-  final EventChannel _onLoadingChannel = const EventChannel('onLoading');
+  final EventChannel _onLoadingChannel = const EventChannel('dafitOnLoading');
   Stream get onLoadingStream =>
       _onLoadingChannel.receiveBroadcastStream(_onLoadingChannel.name).cast();
 }

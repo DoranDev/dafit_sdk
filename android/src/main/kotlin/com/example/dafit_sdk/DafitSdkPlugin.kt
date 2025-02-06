@@ -716,20 +716,36 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               object : CRPFileTransListener {
                 override fun onTransProgressStarting() {
                   Log.d(TAG, "onTransProgressStarting")
+                  var map =   HashMap<String, Any?>()
+                  map["status"] = "onTransProgressStarting"
+                  sendToMainUI(onLoadingSink, map)
                 }
 
                 override fun onTransProgressChanged(percent: Int) {
                   Log.d(
                     TAG,
-                    "percent: $percent"
+                    "onTransProgressChanged: $percent"
                   )
+                  var map =   HashMap<String, Any?>()
+                  map["status"] = "onTransProgressChanged"
+                  map["progress"] = percent
+                  sendToMainUI(onLoadingSink, map)
                 }
 
                 override fun onTransCompleted() {
                   Log.d(TAG, "onTransCompleted")
+                  var map =   HashMap<String, Any?>()
+                  map["status"] = "onTransCompleted"
+                  sendToMainUI(onLoadingSink, map)
+//                mBleConnection!!.sendJieliWatchFaceId(watchfaceId, false)
                 }
 
                 override fun onError(type: Int) {
+                  Log.d(TAG, "onError: $type")
+                  var map =   HashMap<String, Any?>()
+                  map["status"] = "onError"
+                  map["type"] = type
+                  sendToMainUI(onLoadingSink, map)
                 }
               })
           }

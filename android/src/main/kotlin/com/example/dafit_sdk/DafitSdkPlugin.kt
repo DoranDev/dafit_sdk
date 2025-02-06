@@ -1049,6 +1049,9 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
               "onWatchFaceLayoutChange: $info"
             )
             mWatchFaceLayoutInfo = info
+            val jsonResult = gson.toJson(info)
+            val json = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+            result.success(json)
           }
 
           "start_measure_ecg" -> {

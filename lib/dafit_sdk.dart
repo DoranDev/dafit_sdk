@@ -584,8 +584,9 @@ class DafitSdk {
   }
 
   /// Queries watch face layout settings.
-  Future<void> queryWatchFaceLayout() async {
-    await _methodChannel.invokeMethod('query_watch_face_layout');
+  Future queryWatchFaceLayout() async {
+    final result = await _methodChannel.invokeMethod('query_watch_face_layout');
+    return result;
   }
 
   /// Deletes stock information.

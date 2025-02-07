@@ -89,7 +89,7 @@ class DafitSdk {
   }
 
   /// Queries firmware version.
-  Future<void> queryFirmware() async {
+  Future queryFirmware() async {
     await _methodChannel.invokeMethod('query_firmware');
   }
 

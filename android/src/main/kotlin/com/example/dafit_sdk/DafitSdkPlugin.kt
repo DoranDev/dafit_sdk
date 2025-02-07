@@ -686,7 +686,11 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             }
             mBleConnection!!.queryMessageList { list -> Log.d(TAG,"Support message list：$list") }
           }
-          "query_firmware" -> mBleConnection!!.queryFrimwareVersion(CRPDeviceFirmwareVersionCallback { version -> Log.d(TAG,"onDeviceFirmwareVersion：$version") })
+          "query_firmware" -> mBleConnection!!.queryFrimwareVersion { version ->
+            Log.d(TAG, "onDeviceFirmwareVersion：$version")
+            result.success(version);
+          }
+
           "check_firmware" -> {}
           "firmware_upgrade" -> {}
           "switch_background" -> {

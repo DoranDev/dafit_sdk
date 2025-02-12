@@ -1931,6 +1931,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         "onTrainingChange: $info"
       )
 
+      var map =   HashMap<String, Any?>()
+      val jsonResult = gson.toJson(info)
+      map["onTrainingChange"] = gson.toJson(gson.fromJson(jsonResult, HashMap::class.java))
+      sendToMainUI(getMovementStateSink, map)
       queryTrainingDetail()
     }
 

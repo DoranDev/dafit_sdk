@@ -704,17 +704,23 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
             val changeBitmap: Bitmap = changeBitmapSize(
               bgBitmapX,
-              mWatchFaceLayoutInfo!!.getWidth(),
-              mWatchFaceLayoutInfo!!.getHeight()
+              mWatchFaceLayoutInfo!!.width,
+              mWatchFaceLayoutInfo!!.height
             )
             Log.d(
               TAG,
               "changeBitmap width: " + changeBitmap.width + ", height: " + mWatchFaceLayoutInfo!!.getHeight()
             )
-            val watchFaceBackgroundInfo = CRPWatchFaceBackgroundInfo(
+            var watchFaceBackgroundInfo = CRPWatchFaceBackgroundInfo(
               changeBitmap,
               mWatchFaceLayoutInfo!!.getCompressionType()
             )
+
+            if(0<mWatchFaceLayoutInfo!!.thumHeight && 0 < mWatchFaceLayoutInfo!!.thumWidth){
+              val thumBitmap : Bitmap = changeBitmapSize(bgBitmapX , mWatchFaceLayoutInfo!!.thumWidth,mWatchFaceLayoutInfo!!.thumHeight)
+              watchFaceBackgroundInfo.thumBitmap = thumBitmap
+            }
+
             mBleConnection!!.sendWatchFaceBackground(
               watchFaceBackgroundInfo,
               object : CRPFileTransListener {

@@ -1045,12 +1045,17 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
 
           "send_watch_face_layout" -> {
             val watchFaceLayoutInfo = CRPWatchFaceLayoutInfo()
-            watchFaceLayoutInfo.timePosition = CRPWatchFaceLayoutType.WATCH_FACE_TIME_BOTTOM
-            watchFaceLayoutInfo.timeTopContent = CRPWatchFaceLayoutType.WATCH_FACE_CONTENT_SLEEP
-            watchFaceLayoutInfo.timeBottomContent = CRPWatchFaceLayoutType.WATCH_FACE_CONTENT_STEP
-            val color = 0
-            watchFaceLayoutInfo.textColor = color
-            watchFaceLayoutInfo.backgroundPictureMd5 = CRPWatchFaceLayoutType.DEFAULT_WATCH_FACE_BG_MD5
+            val timePosition: Int? = call.argument<Int>("timePosition")
+            val timeTopContent: Int? = call.argument<Int>("timeTopContent")
+            val timeBottomContent: Int? = call.argument<Int>("timeBottomContent")
+            val textColor: Int? = call.argument<Int>("textColor")
+            val backgroundPictureMd5: String? = call.argument<String>("backgroundPictureMd5")
+
+            watchFaceLayoutInfo.timePosition = timePosition!!
+            watchFaceLayoutInfo.timeTopContent = timeTopContent!!
+            watchFaceLayoutInfo.timeBottomContent = timeBottomContent!!
+            watchFaceLayoutInfo.textColor = textColor!!
+            watchFaceLayoutInfo.backgroundPictureMd5 = backgroundPictureMd5!!
             mBleConnection!!.sendWatchFaceLayout(watchFaceLayoutInfo)
           }
           "query_watch_face_layout" -> mBleConnection!!.queryWatchFaceLayout { info ->

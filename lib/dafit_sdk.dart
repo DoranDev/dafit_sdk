@@ -572,8 +572,12 @@ class DafitSdk {
   }
 
   /// Sends watch face layout settings.
-  Future<void> sendWatchFaceLayout(int timePosition, int timeTopContent,
-      int timeBottomContent, int textColor, String backgroundPictureMd5) async {
+  Future<void> sendWatchFaceLayout(
+      {required int timePosition,
+      required int timeTopContent,
+      required int timeBottomContent,
+      required int textColor,
+      required String backgroundPictureMd5}) async {
     await _methodChannel.invokeMethod('send_watch_face_layout', {
       'timePosition': timePosition,
       'timeTopContent': timeTopContent,

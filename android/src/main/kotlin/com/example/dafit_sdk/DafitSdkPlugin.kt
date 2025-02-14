@@ -1048,13 +1048,13 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             val timePosition: Int? = call.argument<Int>("timePosition")
             val timeTopContent: Int? = call.argument<Int>("timeTopContent")
             val timeBottomContent: Int? = call.argument<Int>("timeBottomContent")
-            val textColor: Int? = call.argument<Int>("textColor")
+            val textColor: Number? = call.argument<Number>("textColor")
             val backgroundPictureMd5: String? = call.argument<String>("backgroundPictureMd5")
 
             watchFaceLayoutInfo.timePosition = timePosition!!
             watchFaceLayoutInfo.timeTopContent = timeTopContent!!
             watchFaceLayoutInfo.timeBottomContent = timeBottomContent!!
-            watchFaceLayoutInfo.textColor = textColor!!
+            watchFaceLayoutInfo.textColor = textColor!!.toInt()
             watchFaceLayoutInfo.backgroundPictureMd5 = backgroundPictureMd5!!
             mBleConnection!!.sendWatchFaceLayout(watchFaceLayoutInfo)
           }

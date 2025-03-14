@@ -130,7 +130,7 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
     
     
     //:MARK 扫描
-    @IBAction public func scan(_ sender: UIButton) {
+    @IBAction public func scan() {
 
         CRPSmartBandSDK.sharedInstance.scan(10, progressHandler: { (newDiscoverys) in
             let p = newDiscoverys[0]
@@ -199,13 +199,26 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
     let channel = FlutterMethodChannel(name: "dafit_sdk", binaryMessenger: registrar.messenger())
     let instance = DafitSdkPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
-    //CRPSmartBandSDK.sharedInstance.delegate =
+    CRPSmartBandSDK.sharedInstance.delegate = instance
   }
     
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
-        let manager = CRPSmartBandSDK.sharedInstance
-        switch call.method {
+      let manager = CRPSmartBandSDK.sharedInstance
+      let args = call.arguments as? [String: Any]
+
+      switch call.method {
+        case "connect":
+        let macAddress = args?["macAddress"] as? String ?? ""
+         
+        case "disconnect" :
+         
+        case "isConnected" :
+         
+            
+        case  "createBond" :
+         
+            
         case "10":
             manager.getSteps({ (model, error) in
                 print(model)

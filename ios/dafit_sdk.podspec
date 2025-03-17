@@ -17,7 +17,7 @@ A new Flutter project.
   s.dependency 'Flutter'
   s.vendored_frameworks=
     'FR/CRPSmartBand.framework',
-    'FR/OTAFramework.framework',
+    'FR/OTAFramework_dafit.framework',
     'FR/RTKLEFoundation_dafit.framework',
     'FR/RTKOTASDK_dafit.framework',
     'FR/SpeexKit_dafit.framework'

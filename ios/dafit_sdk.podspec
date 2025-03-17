@@ -20,7 +20,7 @@ A new Flutter project.
     'FR/OTAFramework.framework',
     'FR/RTKLEFoundation.framework',
     'FR/RTKOTASDK.framework',
-    'FR/SpeexKit.framework'
+    'FR/SpeexKit_dafit.framework'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.

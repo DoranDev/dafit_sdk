@@ -18,8 +18,8 @@ A new Flutter project.
   s.vendored_frameworks=
     'FR/CRPSmartBand.framework',
     'FR/OTAFramework.framework',
-    'FR/RTKLEFoundation.framework',
-    'FR/RTKOTASDK.framework',
+    'FR/RTKLEFoundation_dafit.framework',
+    'FR/RTKOTASDK_dafit.framework',
     'FR/SpeexKit_dafit.framework'
   s.platform = :ios, '12.0'
 

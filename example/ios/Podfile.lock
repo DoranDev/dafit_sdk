@@ -1,0 +1,22 @@
+PODS:
+  - dafit_sdk (0.0.1):
+    - Flutter
+  - Flutter (1.0.0)
+
+DEPENDENCIES:
+  - dafit_sdk (from `.symlinks/plugins/dafit_sdk/ios`)
+  - Flutter (from `Flutter`)
+
+EXTERNAL SOURCES:
+  dafit_sdk:
+    :path: ".symlinks/plugins/dafit_sdk/ios"
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  dafit_sdk: 2b51ed1d67bb9042b612e4f8fcca7700145079ec
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+
+PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5
+
+COCOAPODS: 1.16.2

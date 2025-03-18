@@ -14,7 +14,7 @@ EXTERNAL SOURCES:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  dafit_sdk: 1eab30e680ff7602ddc77b78b371cc53186acc56
+  dafit_sdk: 3de77600673d12d3c2d22484ac5fe379f1c020e2
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
 
 PODFILE CHECKSUM: 4305caec6b40dde0ae97be1573c53de1882a07e5

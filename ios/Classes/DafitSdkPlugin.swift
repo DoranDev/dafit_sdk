@@ -212,12 +212,13 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
         let macAddress = args?["macAddress"] as? String ?? ""
          
         case "disconnect" :
+          print("disconnect")
          
         case "isConnected" :
-         
+          print("isConnected")
             
         case  "createBond" :
-         
+          print("createBond")
             
         case "10":
             manager.getSteps({ (model, error) in

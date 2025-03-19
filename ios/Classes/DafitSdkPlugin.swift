@@ -131,6 +131,9 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
 
     public func didState(_ state: CRPState) {
         print("Connect state: \(state.rawValue)")
+        var item = [String: Any]()
+        item["state"] = state.rawValue
+        self.connectionStateSink?(item)
         if state == .connected{
             CRPSmartBandSDK.sharedInstance.checkDFUState { (dfu, err) in
                 print("dfu =\(dfu)")
@@ -389,9 +392,12 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
                 print(error)
                 print("varsion：\(ver)")
             })
-        case "102":
+        case "query_battery":
             manager.getBattery({ (battery, error) in
                 print("Battery：\(battery)")
+                var item = [String: Any]()
+                item["battery"] = battery
+                self.batteryLevelSink?(item)
             })
         case "103":
             manager.getGoal({ (value, error) in
@@ -518,10 +524,9 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
             manager.setQuickView(true)
 
         //时间格式:
-        case "320":
-            manager.setTimeFormat(0)
-        case "121":
-            manager.setTimeFormat(1)
+        case "sync_time":
+          manager.setTimeFormat(0)
+          manager.setTime()
 
         //左右手:
         case "150":

@@ -17,10 +17,7 @@ A new Flutter project.
   s.dependency 'Flutter'
   s.vendored_frameworks=
     'FR/CRPSmartBand.framework',
-    'FR/OTAFramework_dafit.framework',
-    'FR/RTKLEFoundation_dafit.framework',
-    'FR/RTKOTASDK_dafit.framework',
-    'FR/SpeexKit_dafit.framework'
+    'FR/OTAFramework.framework'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.

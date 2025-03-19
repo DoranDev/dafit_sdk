@@ -19,8 +19,7 @@ A new Flutter project.
     'FR/CRPSmartBand.framework',
     'FR/OTAFramework.framework',
     'FR/RTKLEFoundation.framework',
-    'FR/RTKOTASDK.framework',
-    'FR/SpeexKit.framework'
+    'FR/RTKOTASDK.framework'
   s.platform = :ios, '12.0'
 
   # Flutter.framework does not contain a i386 slice.

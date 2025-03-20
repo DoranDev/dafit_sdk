@@ -364,6 +364,8 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
               }
           }
         case "disconnect" :
+          self.disconnect()
+          self.unbind()
           print("disconnect")
 
         case "isConnected" :
@@ -372,10 +374,17 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
         case  "createBond" :
           print("createBond")
 
-        case "10":
+        case "sync_step":
             manager.getSteps({ (model, error) in
                 print(model)
                 print("\(model.steps)step \(model.calory)kcal \(model.distance)m , \(model.time)s")
+                var item = [String: Any]()
+                item["steps"] = model.steps
+                item["distance"] = model.distance
+                item["calorie"] = model.calory
+                let jsonEncoder = JSONEncoder()
+                let jsonResultData = try jsonEncoder.encode(item)
+                self.stepChangeSink?(["onStepChange":jsonResultData])
             })
         case "11":
             manager.getSleepData({ (model, error) in
@@ -625,9 +634,14 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
                 //sender.setTitle("获取间隔(\(interval))", for: UIControUIControl.State
             })
         //获取当天24小时心率
-        case "261":
+        case "query_today_heart_rate":
             manager.get24HourHeartRate({ (hearts, error) in
                 print("today heart.count = \(hearts.count), heart = \(hearts)")
+                var item = [String: Any]()
+                item["onMeasuring"] = hearts.first
+                let jsonEncoder = JSONEncoder()
+                let jsonResultData = try jsonEncoder.encode(item)
+                self.heartRateSink?(["onMeasuring":jsonResultData])
             })
 //            manager.getFullDayHeartRate({ (hearts, error) in
 //                print(hearts)

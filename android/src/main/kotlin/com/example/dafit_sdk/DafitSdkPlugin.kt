@@ -985,15 +985,15 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           "start_measure_heart_rate" -> mBleConnection!!.startMeasureOnceHeartRate()
           "stop_measure_heart_rate" -> mBleConnection!!.stopMeasureOnceHeartRate()
           "sync_last_heart_rate" -> mBleConnection!!.queryLastDynamicRate(CRPHistoryDynamicRateType.FIRST_HEART_RATE)
-          "open_24_hreat_rate" -> mBleConnection!!.enableTimingMeasureHeartRate(1)
-          "close_24_hreat_rate" -> mBleConnection!!.disableTimingMeasureHeartRate()
-          "query_today_hreat_rate" -> mBleConnection!!.queryTodayHeartRate(CRPHeartRateType.TIMING_MEASURE_HEART_RATE)
-          "query_yesterday_hreat_rate" -> {
+          "open_24_heart_rate" -> mBleConnection!!.enableTimingMeasureHeartRate(1)
+          "close_24_heart_rate" -> mBleConnection!!.disableTimingMeasureHeartRate()
+          "query_today_heart_rate" -> mBleConnection!!.queryTodayHeartRate(CRPHeartRateType.TIMING_MEASURE_HEART_RATE)
+          "query_yesterday_heart_rate" -> {
             mBleConnection!!.queryHistoryTimingHeartRate(CRPHistoryDay.TODAY)
             mBleConnection!!.queryHistoryTimingHeartRate(CRPHistoryDay.YESTERDAY)
             mBleConnection!!.queryHistoryTimingHeartRate(CRPHistoryDay.THE_DAY_BEFORE_YESTERDAY)
           }
-          "query_movement_hreat_rate" -> mBleConnection!!.startMovement(CRPMovementHeartRateInfo.WALK_TYPE)
+          "query_movement_heart_rate" -> mBleConnection!!.startMovement(CRPMovementHeartRateInfo.WALK_TYPE)
 
           "send_device_version" -> mBleConnection!!.sendDeviceVersion(CRPDeviceVersionType.INTERNATIONAL_EDITION)
 

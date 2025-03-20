@@ -162,12 +162,12 @@ class DafitSdk {
 
   /// Enables 24-hour heart rate monitoring.
   Future<void> enable24HourHeartRate() async {
-    await _methodChannel.invokeMethod('open_24_hreat_rate');
+    await _methodChannel.invokeMethod('open_24_heart_rate');
   }
 
   /// Disables 24-hour heart rate monitoring.
   Future<void> disable24HourHeartRate() async {
-    await _methodChannel.invokeMethod('close_24_hreat_rate');
+    await _methodChannel.invokeMethod('close_24_heart_rate');
   }
 
   /// Starts blood pressure measurement.
@@ -536,17 +536,17 @@ class DafitSdk {
 
   /// Queries today's heart rate data.
   Future<void> queryTodayHeartRate() async {
-    await _methodChannel.invokeMethod('query_today_hreat_rate');
+    await _methodChannel.invokeMethod('query_today_heart_rate');
   }
 
   /// Queries yesterday's heart rate data.
   Future<void> queryYesterdayHeartRate() async {
-    await _methodChannel.invokeMethod('query_yesterday_hreat_rate');
+    await _methodChannel.invokeMethod('query_yesterday_heart_rate');
   }
 
   /// Queries movement heart rate data.
   Future<void> queryMovementHeartRate() async {
-    await _methodChannel.invokeMethod('query_movement_hreat_rate');
+    await _methodChannel.invokeMethod('query_movement_heart_rate');
   }
 
   /// Sends device version information.

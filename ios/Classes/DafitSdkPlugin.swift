@@ -794,8 +794,6 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
               manager.exitCameraView()
           }
 
-          manager.
-
     default:
       result(FlutterMethodNotImplemented)
     }

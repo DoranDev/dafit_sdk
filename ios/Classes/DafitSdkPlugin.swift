@@ -67,6 +67,9 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
 
     public func recevieTakePhoto() {
         print("recevieTakePhoto")
+        var item = [String: Any]()
+        item["onTakePhoto"] = 1
+        self.cameraSink?(item)
     }
 
 
@@ -236,12 +239,12 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
     }
 
     //:MARK 断开连接
-    @IBAction public func disconnect(_ sender: UIButton) {
+    @IBAction public func disconnect() {
         CRPSmartBandSDK.sharedInstance.disConnet()
     }
 
     //:MARK 重新连接
-    @IBAction public func reconnect(_ sender: UIButton) {
+    @IBAction public func reconnect() {
         CRPSmartBandSDK.sharedInstance.reConnet()
     }
 
@@ -382,9 +385,20 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
                 item["steps"] = model.steps
                 item["distance"] = model.distance
                 item["calorie"] = model.calory
-                let jsonEncoder = JSONEncoder()
-                let jsonResultData = try jsonEncoder.encode(item)
-                self.stepChangeSink?(["onStepChange":jsonResultData])
+                // Handle optional values
+
+                let filteredItem = item.compactMapValues { $0 }
+
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: filteredItem, options: .prettyPrinted)
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print(jsonString)
+                        self.stepChangeSink?(["onStepChange": jsonString])
+                    }
+                } catch {
+                    print("Error converting to JSON: \(error)")
+                }
+
             })
         case "11":
             manager.getSleepData({ (model, error) in
@@ -639,9 +653,18 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
                 print("today heart.count = \(hearts.count), heart = \(hearts)")
                 var item = [String: Any]()
                 item["onMeasuring"] = hearts.first
-                let jsonEncoder = JSONEncoder()
-                let jsonResultData = try jsonEncoder.encode(item)
-                self.heartRateSink?(["onMeasuring":jsonResultData])
+                let filteredItem = item.compactMapValues { $0 }
+
+                do {
+                    let jsonData = try JSONSerialization.data(withJSONObject: filteredItem, options: .prettyPrinted)
+                    if let jsonString = String(data: jsonData, encoding: .utf8) {
+                        print(jsonString)
+                        self.heartRateSink?(["onMeasuring":jsonString])
+                    }
+                } catch {
+                    print("Error converting to JSON: \(error)")
+                }
+
             })
 //            manager.getFullDayHeartRate({ (hearts, error) in
 //                print(hearts)
@@ -763,6 +786,15 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
             manager.deleteStock(id: 1)
         case "380":
             manager.setStockSequence(ids: [1,2])
+      case "camera":
+          let isOpen = args?["isOpen"] as? Bool ?? false
+          if(isOpen){
+              manager.switchCameraView()
+          }else{
+              manager.exitCameraView()
+          }
+
+          manager.
 
     default:
       result(FlutterMethodNotImplemented)

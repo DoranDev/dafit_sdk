@@ -514,7 +514,7 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
 
             //++++++++++++++++++++++++++
 
-        case "90":
+        case "find_band":
             manager.setFindDevice()
 
         //设置用户资料

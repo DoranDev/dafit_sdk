@@ -74,7 +74,7 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
 
 
     public func receiveUpgradeScreen(_ state: CRPUpgradeState, _ progress: Int) {
-        print("state = \(state.description()), progress = \(progress)")
+        print("receiveUpgradeScreen state = \(state.description()), progress = \(progress)")
 
     }
 
@@ -82,7 +82,7 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
         print("heart rate is \(heartRate)")
     }
     public func receiveUpgrede(_ state: CRPUpgradeState, _ progress: Int) {
-        print("state = \(state.description()), progress = \(progress)")
+        print("receiveUpgrede state = \(state.description()), progress = \(progress)")
     }
     public func recevieWeather() {
         print("recevieWeather")
@@ -793,6 +793,21 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
           }else{
               manager.exitCameraView()
           }
+
+      case "sendWatchFace":
+          if let dialPath = args?["path"] as? String {
+              let fileManager = FileManager.default
+              if(fileManager.fileExists(atPath: dialPath)){
+                  manager.startChangeWatchFaceFromFile(path: dialPath)
+              }
+          }
+      case "send_watch_face_layout":
+          let timePosition = args?["timePosition"] as? Int ?? 0
+          let timeTopContent = args?["timeTopContent"] as? Int ?? 0
+          let timeBottomContent = args?["timeBottomContent"] as? Int ?? 0
+          let textColor = args?["textColor"] as? Int ?? 0
+          let backgroundPictureMd5 = args?["backgroundPictureMd5"] as? String ?? ""
+
 
     default:
       result(FlutterMethodNotImplemented)

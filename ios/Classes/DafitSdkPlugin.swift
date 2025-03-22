@@ -75,6 +75,20 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
 
     public func receiveUpgradeScreen(_ state: CRPUpgradeState, _ progress: Int) {
         print("receiveUpgradeScreen state = \(state.description()), progress = \(progress)")
+        var item = [String:Any]()
+        switch state {
+        case .uploading:
+            item["status"] = "onTransProgressChanged"
+            item["progress"] = progress
+        case .completed:
+            item["status"] = "onTransCompleted"
+        case .failed:
+            item["status"] = "onError"
+        @unknown default:
+            item["status"] = "onError"
+        }
+
+        self.onLoadingSink?(item)
 
     }
 
@@ -83,6 +97,20 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
     }
     public func receiveUpgrede(_ state: CRPUpgradeState, _ progress: Int) {
         print("receiveUpgrede state = \(state.description()), progress = \(progress)")
+        var item = [String:Any]()
+        switch state {
+        case .uploading:
+            item["status"] = "onTransProgressChanged"
+            item["progress"] = progress
+        case .completed:
+            item["status"] = "onTransCompleted"
+        case .failed:
+            item["status"] = "onError"
+        @unknown default:
+            item["status"] = "onError"
+        }
+
+        self.onLoadingSink?(item)
     }
     public func recevieWeather() {
         print("recevieWeather")

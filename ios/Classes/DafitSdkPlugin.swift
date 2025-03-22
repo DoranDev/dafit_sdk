@@ -778,13 +778,14 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
             }
             break
         case "switch_background":
-          if let data = args?["data"] as? FlutterStandardDataType {
+          if let data = args?["data"] as? Data {
               guard let image = UIImage(data: data) else {
                   return
               }
               if self.imageSize != nil && self.compressionType != nil {
                   manager.startChangeScreen(image, self.imageSize, false, compressionType)
-              }\}
+              }
+          }
             break
         case "340":
             manager.getStressIsSupport { value, error in
@@ -836,7 +837,9 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
           let timeBottomContent = args?["timeBottomContent"] as? Int ?? 0
           let textColor = args?["textColor"] as? Int ?? 0
           let backgroundPictureMd5 = args?["backgroundPictureMd5"] as? String ?? ""
-          manager.setupScreenContent(content: ScreenContent(position: timePosition, upperContent: timeTopContent, underContent: timeBottomContent, contentColor: flutterColorToUIColor(textColor), md5: backgroundPictureMd5))
+          var screenContent = ScreenContent(position: ContentPosition(rawValue: timePosition)!, upperContent: .none, underContent: .none, contentColor: flutterColorToUIColor(flutterColor: textColor), md5: backgroundPictureMd5)
+
+          manager.setupScreenContent(content: screenContent)
     default:
       result(FlutterMethodNotImplemented)
     }

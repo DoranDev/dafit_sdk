@@ -842,7 +842,7 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
     }
   }
 
-    func flutterColorToUIColor(flutterColor: UInt32) -> UIColor {
+    func flutterColorToUIColor(flutterColor: Int) -> UIColor {
         let alpha = CGFloat((flutterColor >> 24) & 0xFF) / 255.0
         let red = CGFloat((flutterColor >> 16) & 0xFF) / 255.0
         let green = CGFloat((flutterColor >> 8) & 0xFF) / 255.0

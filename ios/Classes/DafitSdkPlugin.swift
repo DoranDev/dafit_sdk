@@ -771,19 +771,20 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
             manager.deleteContact(contactID: 0)
         case "321":
             manager.cleanAllContact()
-        case "330":
+        case "query_support_watch_face":
             manager.getScreenContent { (content, imageSize, compressionType, error) in
                 self.imageSize = imageSize
                 self.compressionType = compressionType
             }
             break
-        case "331":
-            guard let image = UIImage(named: "image") else {
-                return
-            }
-            if self.imageSize != nil && self.compressionType != nil {
-                manager.startChangeScreen(image, self.imageSize, false, compressionType)
-            }
+        case "switch_background":
+          if let data = args?["data"] as? FlutterStandardDataType {
+              guard let image = UIImage(data: data) else {
+                  return
+              }
+              if self.imageSize != nil && self.compressionType != nil {
+                  manager.startChangeScreen(image, self.imageSize, false, compressionType)
+              }\}
             break
         case "340":
             manager.getStressIsSupport { value, error in
@@ -835,12 +836,20 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
           let timeBottomContent = args?["timeBottomContent"] as? Int ?? 0
           let textColor = args?["textColor"] as? Int ?? 0
           let backgroundPictureMd5 = args?["backgroundPictureMd5"] as? String ?? ""
-
-
+          manager.setupScreenContent(content: ScreenContent(position: timePosition, upperContent: timeTopContent, underContent: timeBottomContent, contentColor: flutterColorToUIColor(textColor), md5: backgroundPictureMd5))
     default:
       result(FlutterMethodNotImplemented)
     }
   }
+
+    func flutterColorToUIColor(flutterColor: UInt32) -> UIColor {
+        let alpha = CGFloat((flutterColor >> 24) & 0xFF) / 255.0
+        let red = CGFloat((flutterColor >> 16) & 0xFF) / 255.0
+        let green = CGFloat((flutterColor >> 8) & 0xFF) / 255.0
+        let blue = CGFloat(flutterColor & 0xFF) / 255.0
+
+        return UIColor(red: red, green: green, blue: blue, alpha: alpha)
+    }
 
 
     func getWatchInfo(model: [Int], currentPage: Int, perPage: Int){

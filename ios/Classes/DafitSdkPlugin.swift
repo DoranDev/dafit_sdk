@@ -4,6 +4,51 @@ import CRPSmartBand
 
 public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
     
+    private func showImageDialog(image: UIImage) {
+        DispatchQueue.main.async {
+            if let rootViewController = UIApplication.shared.keyWindow?.rootViewController {
+                // Create alert controller
+                let alert = UIAlertController(title: nil, message: nil, preferredStyle: .alert)
+
+                // Create image view
+                let imageView = UIImageView(frame: CGRect(x: 10, y: 10, width: 250, height: 250))
+                imageView.image = image
+                imageView.contentMode = .scaleAspectFit
+
+                // Add image view to alert
+                alert.view.addSubview(imageView)
+
+                // Set constraints
+                let height = NSLayoutConstraint(
+                    item: alert.view!,
+                    attribute: .height,
+                    relatedBy: .equal,
+                    toItem: nil,
+                    attribute: .notAnAttribute,
+                    multiplier: 1,
+                    constant: 300
+                )
+                let width = NSLayoutConstraint(
+                    item: alert.view!,
+                    attribute: .width,
+                    relatedBy: .equal,
+                    toItem: nil,
+                    attribute: .notAnAttribute,
+                    multiplier: 1,
+                    constant: 270
+                )
+                alert.view.addConstraint(height)
+                alert.view.addConstraint(width)
+
+                // Add OK button
+                alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
+
+                // Present alert
+                rootViewController.present(alert, animated: true, completion: nil)
+            }
+        }
+    }
+
     // Event sinks for various event channels
     var deviceDataReceivedSink: FlutterEventSink?
     var connectionStateSink: FlutterEventSink?
@@ -772,9 +817,9 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
         case "321":
             manager.cleanAllContact()
         case "query_support_watch_face":
-            manager.getScreenContent { (content, imageSize, compressionType, error) in
-                self.imageSize = imageSize
-                self.compressionType = compressionType
+            manager.getWatchFaceSupportModel { (model, error) in
+                print("currentID = \(model.currentID)")
+                print("supportModel = \(model.supportModel)")
             }
             break
       case "query_watch_face_layout":
@@ -786,12 +831,14 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
         case "switch_background":
           print("mulai switch_background")
           let bgBytes = args?["bgBytes"] as? FlutterStandardTypedData
-          var imageUInt : [UInt8] = [UInt8](bgBytes!.data)
+          let imageUInt : [UInt8] = [UInt8](bgBytes!.data)
 
           let data = Data(imageUInt)
           let uiImage = UIImage(data: data)
               if self.imageSize != nil && self.compressionType != nil {
                   print("startChangeScreen switch_background")
+                  print("startChangeScreen \(compressionType) \(imageSize.originalWidth)")
+//                  showImageDialog(image: uiImage!)
                   manager.startChangeScreen(uiImage!, self.imageSize, false, compressionType)
               }
 
@@ -849,7 +896,7 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
           let backgroundPictureMd5 = args?["backgroundPictureMd5"] as? String ?? ""
           var screenContent = ScreenContent(position: ContentPosition(rawValue: timePosition)!, upperContent: .none, underContent: .none, contentColor: flutterColorToUIColor(flutterColor: textColor), md5: backgroundPictureMd5)
 
-          manager.setupScreenContent(content: screenContent)
+//          manager.setupScreenContent(content: screenContent)
     default:
       result(FlutterMethodNotImplemented)
     }

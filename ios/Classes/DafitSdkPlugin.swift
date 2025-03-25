@@ -777,14 +777,24 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
                 self.compressionType = compressionType
             }
             break
+      case "query_watch_face_layout":
+          manager.getScreenContent { (content, imageSize, compressionType, error) in
+              self.imageSize = imageSize
+              self.compressionType = compressionType
+          }
+          break
         case "switch_background":
+          print("mulai switch_background")
           if let data = args?["data"] as? Data {
-              guard let image = UIImage(data: data) else {
-                  return
-              }
+              print("to UIImage switch_background")
+              let image = UIImage(data: data)
+
               if self.imageSize != nil && self.compressionType != nil {
-                  manager.startChangeScreen(image, self.imageSize, false, compressionType)
+                  print("tstartChangeScreen switch_background")
+                  manager.startChangeScreen(image!, self.imageSize, false, compressionType)
               }
+          }else{
+              print("data kosong switch_background")
           }
             break
         case "340":
@@ -828,6 +838,7 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
           if let dialPath = args?["path"] as? String {
               let fileManager = FileManager.default
               if(fileManager.fileExists(atPath: dialPath)){
+                  print("mulai mengirim custom dial \(dialPath)")
                   manager.startChangeWatchFaceFromFile(path: dialPath)
               }
           }

@@ -785,17 +785,16 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
           break
         case "switch_background":
           print("mulai switch_background")
-          if let data = args?["data"] as? Data {
-              print("to UIImage switch_background")
-              let image = UIImage(data: data)
+          let bgBytes = args?["bgBytes"] as? FlutterStandardTypedData
+          var imageUInt : [UInt8] = [UInt8](bgBytes!.data)
 
+          let data = Data(imageUInt)
+          let uiImage = UIImage(data: data)
               if self.imageSize != nil && self.compressionType != nil {
-                  print("tstartChangeScreen switch_background")
-                  manager.startChangeScreen(image!, self.imageSize, false, compressionType)
+                  print("startChangeScreen switch_background")
+                  manager.startChangeScreen(uiImage!, self.imageSize, false, compressionType)
               }
-          }else{
-              print("data kosong switch_background")
-          }
+
             break
         case "340":
             manager.getStressIsSupport { value, error in

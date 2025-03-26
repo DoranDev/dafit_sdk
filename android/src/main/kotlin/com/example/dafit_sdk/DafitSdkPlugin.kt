@@ -494,10 +494,10 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
         }
       }
       else -> {
-        if (!mBleDevice!!.isConnected) {
-          result.error("not connected", "not connected", null)
-          return
-        }
+//        if (!mBleDevice!!.isConnected) {
+//          result.error("not connected", "not connected", null)
+//          return
+//        }
         when(call.method){
           "sendDoNotDistrubTime" -> {
             val isDoNotDistrub: Boolean? = call.argument<Boolean>("isDoNotDistrub")

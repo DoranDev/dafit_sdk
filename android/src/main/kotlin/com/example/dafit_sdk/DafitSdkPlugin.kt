@@ -63,6 +63,7 @@ import com.crrepa.ble.conn.callback.CRPContactConfigCallback
 import com.crrepa.ble.conn.callback.CRPDeviceFirmwareVersionCallback
 import com.crrepa.ble.conn.callback.CRPDeviceFunctionCallback
 import com.crrepa.ble.conn.callback.CRPDeviceMetricSystemCallback
+import com.crrepa.ble.conn.callback.CRPDeviceOtherMessageCallback
 import com.crrepa.ble.conn.callback.CRPDevicePhysiologcalPeriodCallback
 import com.crrepa.ble.conn.callback.CRPDeviceSupportWatchFaceCallback
 import com.crrepa.ble.conn.callback.CRPWatchFaceDetailsCallback
@@ -483,7 +484,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
       }
       "isConnected" -> {
         if (mBleDevice != null) {
-         val res = mBleDevice!!.isConnected
+          val res = mBleDevice!!.isConnected
           result.success(res)
         }
       }
@@ -879,6 +880,11 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
           "send_message" -> {
             val message: String? = call.argument<String>("message")
             val type: Int? = call.argument<Int>("type")
+
+            Log.d(
+              TAG,
+              "message: $message , type: $type"
+            )
             val versionCode: Int? = call.argument<Int>("versionCode")
             val messageInfo = CRPMessageInfo()
             messageInfo.message = message
@@ -890,7 +896,15 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             messageInfo.versionCode = versionCode!!
             messageInfo.isHs = false
             messageInfo.isSmallScreen = true
-            mBleConnection!!.sendMessage(messageInfo)
+//            Handler(Looper.getMainLooper()).post {
+//              Log.d(
+//                TAG,
+//                "message: $message , type: $type"
+//              )
+//              mBleConnection?.sendMessage(messageInfo)
+//            }
+            mBleConnection?.sendMessage(messageInfo)
+
           }
           "send_alarm_clock" -> {
             val alarmInfo = CRPAlarmInfo()
@@ -963,9 +977,18 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
                 )
               }
             }
-          "send_other_message" -> //                mBleConnection!!.sendOtherMessageState(true);
-            mBleConnection!!.enterCameraView()
-          "query_other_message" -> mBleConnection!!.exitCameraView()
+          "send_other_message" -> //
+            mBleConnection!!.sendOtherMessageState(true);
+          "query_other_message" -> {
+            mBleConnection!!.queryOtherMessageState(object : CRPDeviceOtherMessageCallback {
+              override fun onOtherMessage(p0: Boolean) {
+                Log.d(
+                  TAG,
+                  "queryOtherMessageState: $p0"
+                )
+              }
+            })
+          }
           "send_sedentary_reminder" -> mBleConnection!!.sendSedentaryReminder(true)
           "query_sedentary_reminder" -> mBleConnection!!.querySedentaryReminder { state ->
             Log.d(

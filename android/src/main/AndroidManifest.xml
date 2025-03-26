@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-  package="com.example.dafit_sdk">
+    package="com.example.dafit_sdk">
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
@@ -8,4 +8,7 @@
     <!-- Android 12 Add permission-->
     <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <application>
+        <activity android:name="com.crrepa.ble.trans.upgrade.NotificationActivity" />
+    </application>
 </manifest>

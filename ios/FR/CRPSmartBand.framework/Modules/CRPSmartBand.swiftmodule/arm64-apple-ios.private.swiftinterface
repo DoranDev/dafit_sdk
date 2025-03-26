@@ -1,7 +1,7 @@
 // swift-interface-format-version: 1.0
-// swift-compiler-version: Apple Swift version 5.9.2 (swiftlang-5.9.2.2.56 clang-1500.1.0.2.5)
-// swift-module-flags: -target arm64-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -module-name CRPSmartBand
-// swift-module-flags-ignorable: -enable-bare-slash-regex
+// swift-compiler-version: Apple Swift version 6.0.2 effective-5.10 (swiftlang-6.0.2.1.2 clang-1600.0.26.4)
+// swift-module-flags: -target arm64-apple-ios9.0 -enable-objc-interop -enable-library-evolution -swift-version 5 -enforce-exclusivity=checked -O -enable-bare-slash-regex -module-name CRPSmartBand
+// swift-module-flags-ignorable: -no-verify-emitted-module-interface
 @_exported import CRPSmartBand
 import CoreBluetooth
 import CoreLocation
@@ -305,6 +305,16 @@ extension CRPSmartBand.CRPDownloadRequest {
   @objc override dynamic public init()
   @objc deinit
 }
+@objc indirect public enum CRPVoiceAuthState : Swift.Int {
+  case Authorized
+  case Unauthorized
+  case TimeError
+  public init?(rawValue: Swift.Int)
+  public typealias RawValue = Swift.Int
+  public var rawValue: Swift.Int {
+    get
+  }
+}
 @objc public protocol CRPManagerDelegate {
   @objc func didState(_ state: CRPSmartBand.CRPState)
   @objc func didBluetoothState(_ state: CRPSmartBand.CRPBluetoothState)
@@ -350,6 +360,9 @@ extension CRPSmartBand.CRPDownloadRequest {
   @objc optional func receivePrayerAuxiliaryRequest()
   @objc optional func receiveDeleteAllahName(id: Swift.Int)
   @objc optional func receiveDeleteDuas(id: Swift.Int)
+  @objc optional func receiveSOS()
+  @objc optional func receiveVoiceAuth(state: CRPSmartBand.CRPVoiceAuthState)
+  @objc optional func receiveVoiceAuthData(_ data: Foundation.Data)
 }
 public enum CRPResult<Value> {
   case success(Value)
@@ -1053,6 +1066,12 @@ extension CRPSmartBand.CRPSessionDelegate : Foundation.URLSessionStreamDelegate 
   @objc public func receiveRequestGPTAnswer()
   @objc public func receiveRequestGPTPreviewImage(imageSize: CoreFoundation.CGSize)
   @objc public func receiveRequestGPTImage()
+  @objc public func receivePrayerAuxiliaryRequest()
+  @objc public func receiveDeleteAllahName(id: Swift.Int)
+  @objc public func receiveDeleteDuas(id: Swift.Int)
+  @objc public func receiveSOS()
+  @objc public func receiveVoiceAuth(state: CRPSmartBand.CRPVoiceAuthState)
+  @objc public func receiveVoiceAuthData(_ data: Foundation.Data)
   @objc open func scan(_ duration: Foundation.TimeInterval = 3, progressHandler: CRPSmartBand.scanProgressHandler?, completionHandler: CRPSmartBand.scanCompletionHandler?)
   @objc open func interruptScan()
   @objc open func connet(_ discovery: CRPSmartBand.CRPDiscovery)
@@ -1129,7 +1148,7 @@ extension CRPSmartBand.CRPSessionDelegate : Foundation.URLSessionStreamDelegate 
   @objc open func startGoodixUpgradeFromFile(zipPath: Swift.String)
   @objc open func checkDFUState(_ handler: @escaping CRPSmartBand.stringHandler)
   @objc open func stopUpgrade()
-  @objc open func startChangeScreen(_ image: UIKit.UIImage, _ imageSize: CRPSmartBand.ScreenImageSize, _ isCricle: Swift.Bool = false, _ compressionType: Swift.Int)
+  @objc open func startChangeScreen(_ image: UIKit.UIImage, _ imageSize: CRPSmartBand.ScreenImageSize, _ isCricle: Swift.Bool = false, _ compressionType: Swift.Int, _ thumbnailImage: UIKit.UIImage? = nil)
   @objc open func stopChangeScreen()
   @objc open func setupScreenContent(content: CRPSmartBand.ScreenContent)
   @objc open func setStepLength(length: Swift.Int)
@@ -1282,6 +1301,7 @@ extension CRPSmartBand.CRPSessionDelegate : Foundation.URLSessionStreamDelegate 
   @objc open func setDeviceUserMode()
   @objc open func getDevicePlatformInfo(_ handler: @escaping CRPSmartBand.platformInfoHandler)
   @objc open func getJLScreenMarketVersionInfo(_ handler: @escaping CRPSmartBand.screenMarketVersionInfoHandler)
+  @objc open func getZKScreenMarketVersionInfo(_ handler: @escaping CRPSmartBand.screenMarketVersionInfoHandler)
   @objc open func getNewWatchFaceTagList(supportModel: [Swift.Int], ver: Swift.String, currentPage: Swift.Int, perPage: Swift.Int, memorySize: Swift.Int, platform: CRPSmartBand.CRPPlatform, model: CRPSmartBand.CRPScreenMarketVersionModel, _ handler: @escaping CRPSmartBand.watchFaceTagListHandler)
   @objc open func getNewWatchFaceList(tag_id: Swift.Int, ver: Swift.String, supportModel: [Swift.Int], currentPage: Swift.Int, perPage: Swift.Int, memorySize: Swift.Int, platform: CRPSmartBand.CRPPlatform, model: CRPSmartBand.CRPScreenMarketVersionModel, _ handler: @escaping CRPSmartBand.watchFaceListHandler)
   @objc open func getNewWatchFaceInfo(screenId: Swift.Int, ver: Swift.String, supportModel: [Swift.Int], memorySize: Swift.Int, platform: CRPSmartBand.CRPPlatform, model: CRPSmartBand.CRPScreenMarketVersionModel, _ handler: @escaping CRPSmartBand.watchFaceInfoHandler)
@@ -1348,6 +1368,7 @@ extension CRPSmartBand.CRPSessionDelegate : Foundation.URLSessionStreamDelegate 
   @objc open func getDuascalcMethods(_ handler: @escaping CRPSmartBand.prayerTimingsCalculationHandler)
   @objc open func getNapsSleep(_ handler: @escaping CRPSmartBand.napsSleepHandler)
   @objc open func getNapsSleepHistory(day: Swift.Int, handler: @escaping CRPSmartBand.historyNapsSleepHandler)
+  @objc open func sendVoiceAuth(data: Foundation.Data)
   @objc deinit
 }
 open class CRPMultipartFormData {
@@ -2165,7 +2186,8 @@ public func getCurrentLanguage() -> Swift.String
 @objc @objcMembers public class CRPScreenMarketVersionModel : ObjectiveC.NSObject {
   @objc public var apiVersion: Swift.Int
   @objc public var funcVersion: Swift.Int
-  @objc public init(apiVersion: Swift.Int, funcVersion: Swift.Int)
+  @objc public var api_ver_all: [Swift.String : Swift.Int]
+  @objc public init(apiVersion: Swift.Int, funcVersion: Swift.Int, api_ver_all: [Swift.String : Swift.Int])
   @objc deinit
 }
 @objc @_hasMissingDesignatedInitializers @objcMembers public class CRPNewWatchFaceSupportModel : ObjectiveC.NSObject {
@@ -2574,6 +2596,9 @@ extension CRPSmartBand.CRPURLEncoding.ArrayEncoding : Swift.Equatable {}
 extension CRPSmartBand.CRPURLEncoding.ArrayEncoding : Swift.Hashable {}
 extension CRPSmartBand.CRPURLEncoding.BoolEncoding : Swift.Equatable {}
 extension CRPSmartBand.CRPURLEncoding.BoolEncoding : Swift.Hashable {}
+extension CRPSmartBand.CRPVoiceAuthState : Swift.Equatable {}
+extension CRPSmartBand.CRPVoiceAuthState : Swift.Hashable {}
+extension CRPSmartBand.CRPVoiceAuthState : Swift.RawRepresentable {}
 extension CRPSmartBand.CRPPlatform : Swift.Equatable {}
 extension CRPSmartBand.CRPPlatform : Swift.Hashable {}
 extension CRPSmartBand.CRPPlatform : Swift.RawRepresentable {}

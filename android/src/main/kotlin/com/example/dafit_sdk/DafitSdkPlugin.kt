@@ -895,14 +895,7 @@ class DafitSdkPlugin: FlutterPlugin, MethodCallHandler, ActivityAware {
             }
             messageInfo.versionCode = versionCode!!
             messageInfo.isHs = false
-            messageInfo.isSmallScreen = true
-//            Handler(Looper.getMainLooper()).post {
-//              Log.d(
-//                TAG,
-//                "message: $message , type: $type"
-//              )
-//              mBleConnection?.sendMessage(messageInfo)
-//            }
+            messageInfo.isSmallScreen = false
             mBleConnection?.sendMessage(messageInfo)
 
           }

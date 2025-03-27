@@ -896,7 +896,8 @@ public class DafitSdkPlugin: NSObject, FlutterPlugin, CRPManagerDelegate {
           let backgroundPictureMd5 = args?["backgroundPictureMd5"] as? String ?? ""
           var screenContent = ScreenContent(position: ContentPosition(rawValue: timePosition)!, upperContent: .none, underContent: .none, contentColor: flutterColorToUIColor(flutterColor: textColor), md5: backgroundPictureMd5)
 
-//          manager.setupScreenContent(content: screenContent)
+          manager.setupScreenContent(content: screenContent)
+          manager.setDial(5)
     default:
       result(FlutterMethodNotImplemented)
     }

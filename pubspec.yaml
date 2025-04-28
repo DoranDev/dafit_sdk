@@ -1,6 +1,10 @@
 name: dafit_sdk
 description: "A new Flutter project."
+<<<<<<< HEAD
 version: 0.1.53
+=======
+version: 0.1.50
+>>>>>>> parent of e58d59c (ios)
 homepage:
 
 environment:

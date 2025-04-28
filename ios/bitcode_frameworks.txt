@@ -1,4 +1,1 @@
 ./FR/OTAFramework.framework/OTAFramework
-./FR/RTKLEFoundation.framework/RTKLEFoundation
-./FR/RTKOTASDK.framework/RTKOTASDK
-./FR/SpeexKit.framework/SpeexKit
